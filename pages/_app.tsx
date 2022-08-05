@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
     </QueryClientProvider>
-  ) 
+  )
 }
 
 export default MyApp

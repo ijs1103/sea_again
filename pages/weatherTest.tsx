@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { getWeather } from './apis/getWeather'
+import { getWeather } from './api/openApi'
 import { today } from '@utils/aboutTime'
 import { WeatherResponse } from '@utils/interfaces'
 import { W_CATEGORY } from '@utils/constants'
@@ -10,7 +10,7 @@ function weatherTest() {
 	console.log(base_date, base_time)
 	const params = ({ base_date, base_time, nx, ny }) => {
 		return {
-			serviceKey: process.env.NEXT_PUBLIC_WEATHER_KEY,
+			serviceKey: process.env.NEXT_PUBLIC_APIKEY,
 			dataType: 'JSON',
 			/* 총 데이터는 60개인데, 내가 필요한 카테고리 데이터는 30개만 불러들이면 된다 */
 			numOfRows: 30,

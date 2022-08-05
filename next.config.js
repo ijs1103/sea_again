@@ -9,10 +9,10 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: 'https://apis.data.go.kr',
+        destination: 'https://apis.data.go.kr/',
       },
-    ];
+    ]
   },
-};
+}
 
 module.exports = nextConfig

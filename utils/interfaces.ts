@@ -1,11 +1,11 @@
 export interface WeatherParams {
   serviceKey: string | undefined
-  dataType: string
   numOfRows?: number
   base_date: string
   base_time: string
   nx: number
   ny: number
+  dataType: 'JSON'
 }
 export interface WeatherResponse {
   baseDate: string
@@ -16,4 +16,11 @@ export interface WeatherResponse {
   fcstValue: string
   nx: number
   ny: number
+}
+export interface BeachParams {
+  ServiceKey: string | undefined
+  pageNo: number
+  numOfRows: number
+  SIDO_NM: string
+  resultType: string
 }
