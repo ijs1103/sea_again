@@ -4,10 +4,10 @@ import React from 'react'
 
 function App() {
 	return (
-		<div className='h-screen'>
+		<div className='h-screen w-full'>
 			<div className='fixed left-0 top-0 w-full h-full bg-[url("/beach_main.webp")] bg-cover bg-no-repeat blur-sm'>
 			</div>
-			<div className='fixed left-0 top-0 w-full h-full max-w-4xl mx-auto flex flex-col justify-between items-center pb-16'>
+			<div className='fixed left-0 top-0 bottom-0 right-0 h-full max-w-4xl mx-auto flex flex-col justify-between items-center pb-16'>
 				<div className='select-none'>
 					<Image src={'/seaagain_logo.png'} width={800} height={400} alt='logo' />
 					<h2 className="text-center text-4xl font-['Jeju_Hallasan'] text-white">안전한 해수욕장은 어디일까?</h2>

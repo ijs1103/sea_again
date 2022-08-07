@@ -12,7 +12,7 @@ function weatherTest() {
 		resultType: 'json',
 		pageNo: 1,
 		numOfRows: 100,
-		SIDO_NM: '제주',
+		SIDO_NM: '부산',
 	}
 	const { data, loading, error } = useQuery<any>(['beach'], () => getBeach(payload))
 	console.log(data)

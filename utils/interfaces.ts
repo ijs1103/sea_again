@@ -24,3 +24,18 @@ export interface BeachParams {
   SIDO_NM: string
   resultType: string
 }
+export interface BeachResponse {
+  beach_img: string | null
+  beach_knd: string | null
+  beach_len: string | null
+  beach_wid: string | null
+  gugun_nm: string
+  lat: string
+  link_addr: string
+  link_nm: string
+  link_tel: string | null
+  lon: string
+  num: number
+  sido_nm: string
+  sta_nm: string
+}

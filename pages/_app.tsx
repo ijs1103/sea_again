@@ -18,7 +18,9 @@ const queryClient = new QueryClient({});
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <div className='h-screen'>
+        <Component {...pageProps} />
+      </div>
     </QueryClientProvider>
   )
 }

@@ -17,11 +17,22 @@ const getWeather = async (params: WeatherParams) => {
   return item
 }
 
-const getBeach = async (params: BeachParams) => {
-  const { data } = await axios.get<any>(BEACH_BASE_URL, {
+const getBeach = async (SIDO_NM: string) => {
+  const params = {
+    ServiceKey: process.env.NEXT_PUBLIC_APIKEY,
+    resultType: 'json',
+    pageNo: 1,
+    numOfRows: 100,
+    SIDO_NM,
+  }
+  const {
+    data: {
+      getOceansBeachInfo: { item },
+    },
+  } = await axios.get<any>(BEACH_BASE_URL, {
     params,
   })
-  return data
+  return item
 }
 
 export { getBeach, getWeather }
