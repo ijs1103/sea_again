@@ -1,5 +1,6 @@
 import SearchBar from '@components/layout/SearchBar';
 import SearchResult from '@components/layout/SearchResult';
+import Modal from '@components/Modal';
 import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
@@ -24,7 +25,6 @@ function App() {
 	const [beach, setBeach] = useState<BeachResponse | null>(null)
 	const [markers, setMarkers] = useState<any[]>([]);
 	const overlayContent = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:10px; width:100px; height:100px; background-color: #fff'>← 클릭하여 <strong style='color: #5E17EB'>${beach?.sta_nm}</strong> 상세정보</span>`
-
 	// 하나의 마커를 생성하고 지도위에 표시하는 함수입니다
 	const addMarker = (pos: Pos, map: any) => {
 		const position = new window.kakao.maps.LatLng(pos.lat, pos.lng)
@@ -39,7 +39,6 @@ function App() {
 			map,
 			image
 		})
-
 		// 커스텀 오버레이를 생성하고 지도에 표시한다
 		const overlay = new window.kakao.maps.CustomOverlay({
 			map,
@@ -50,7 +49,7 @@ function App() {
 			yAnchor: 2.5 // 컨텐츠의 y 위치
 		});
 		// 오버레이 생성시 자동으로 표시가 되는데 이를 off하기 위함
-		overlay.setMap(null);
+		//overlay.setMap(null);
 		window.kakao.maps.event.addListener(marker, 'mouseover', function () {
 			overlay.setMap(map);
 		});
@@ -118,9 +117,9 @@ function App() {
 				ref={mapRef}
 				className='shadow-2xl fixed top-0 left-0 w-full h-screen'
 			></div>
-			{beach && <SearchResult keyword={beach.sta_nm} />}
 			<SearchBar />
-
+			{beach && <SearchResult keyword={beach.sta_nm} />}
+			<Modal {...beach} />
 		</div>
 
 	);

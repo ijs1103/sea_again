@@ -18,6 +18,7 @@ module.exports = {
         oddComment: '#F3F3F3',
         evenComment: '#F2EBFF',
         searchResult: '#353B48',
+        modalPrimary: '#8C52FF',
       },
     },
   },
