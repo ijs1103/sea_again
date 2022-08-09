@@ -1,11 +1,8 @@
 export interface WeatherParams {
-  serviceKey: string | undefined
-  numOfRows?: number
   base_date: string
   base_time: string
   nx: number
   ny: number
-  dataType: 'JSON'
 }
 export interface WeatherResponse {
   baseDate: string
@@ -39,3 +36,4 @@ export interface BeachResponse {
   sido_nm: string
   sta_nm: string
 }
+export type TabType = '날씨' | '수질' | '모래' | '후기'

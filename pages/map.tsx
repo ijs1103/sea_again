@@ -17,13 +17,14 @@ interface Pos {
 	lng: number
 }
 
-
 function App() {
 	const router = useRouter()
 	const mapRef = useRef<HTMLDivElement>(null);
 	const map = useRef<any>(null);
 	const [beach, setBeach] = useState<BeachResponse | null>(null)
 	const [markers, setMarkers] = useState<any[]>([]);
+	const [isModalOn, setIsModalOn] = useState(false)
+	const handleModalClose = () => setIsModalOn(false)
 	const overlayContent = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:10px; width:100px; height:100px; background-color: #fff'>← 클릭하여 <strong style='color: #5E17EB'>${beach?.sta_nm}</strong> 상세정보</span>`
 	// 하나의 마커를 생성하고 지도위에 표시하는 함수입니다
 	const addMarker = (pos: Pos, map: any) => {
@@ -49,7 +50,7 @@ function App() {
 			yAnchor: 2.5 // 컨텐츠의 y 위치
 		});
 		// 오버레이 생성시 자동으로 표시가 되는데 이를 off하기 위함
-		//overlay.setMap(null);
+		overlay.setMap(null);
 		window.kakao.maps.event.addListener(marker, 'mouseover', function () {
 			overlay.setMap(map);
 		});
@@ -58,7 +59,7 @@ function App() {
 		});
 		// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
 		window.kakao.maps.event.addListener(marker, 'click', function () {
-			alert('마커를 클릭했습니다!');
+			setIsModalOn(true)
 		});
 		// 마커가 지도 위에 표시되도록 설정합니다
 		marker.setMap(map);
@@ -74,7 +75,7 @@ function App() {
 
 	useEffect(() => {
 		router.isReady && setBeach(JSON.parse(router.query.data))
-	}, [router.isReady])
+	}, [router.isReady, router.query.data])
 
 	useEffect(() => {
 		if (!beach) return
@@ -119,7 +120,7 @@ function App() {
 			></div>
 			<SearchBar />
 			{beach && <SearchResult keyword={beach.sta_nm} />}
-			<Modal {...beach} />
+			{beach && isModalOn && <Modal onModalClose={handleModalClose} beachData={beach} />}
 		</div>
 
 	);

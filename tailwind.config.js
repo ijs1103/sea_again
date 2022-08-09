@@ -10,7 +10,7 @@ module.exports = {
         primary: '#5E17EB',
         toggleOn: '#5D5FEF',
         toggleOff: '#FCDDEC',
-        gray: '#EBEBEB',
+        lightGray: '#EBEBEB',
         fontPrimary: '#2B3674',
         fontSecondary: '#A3AED0',
         safe: '#4CAF50',
