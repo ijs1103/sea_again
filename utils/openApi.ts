@@ -87,13 +87,15 @@ const getWater = async (SIDO_NM: string, sta_nm: string) => {
   // sta_nm(해수욕장 이름)이 수질확인 api 데이터와 일치하는 데이터(배열)를 모두 찾고,
   // 해당 배열의 res_yn(적합여부)가 전부 "적합"이면 적합 판정 O , 하나의 res_yn(적합여부)라도 "부적합"이면 적합 판정 X
   const tempArr = item.filter((cur: any) => cur.sta_nm === sta_nm)
+  if (!tempArr.length) return { message: NO_RESEARCH_MSG }
   const ok = tempArr.every((cur: any) => cur.res_yn === '적합')
   // res_date(조사일자)는 timestamp 값인데 reduce 함수로 최대값, 즉 가장 최신의 조사일자를 의미한다
-  const latestTestDate = timestampToDate(
-    tempArr.reduce((a: any, c: any) =>
-      a.res_date > c.res_date ? a.res_date : c.res_date
-    ) || '미기록'
-  )
+  const latestTestDate =
+    timestampToDate(
+      tempArr.reduce((a: any, c: any) =>
+        a.res_date > c.res_date ? a.res_date : c.res_date
+      )
+    ) || '없음'
   return { ok, testDate: latestTestDate }
 }
 
@@ -113,13 +115,14 @@ const getSand = async (SIDO_NM: string, sta_nm: string) => {
   } = await axios.get<any>(SAND_BASE_URL, {
     params,
   })
+  console.log(item)
   // sta_nm(해수욕장 이름)이 수질확인 api 데이터와 일치하는 데이터를 찾고,
   // 해당 배열의 res_yn(적합여부)가 전부 "적합"이면 적합 판정 O , 하나의 res_yn(적합여부)라도 "부적합"이면 적합 판정 X
   const existingBeach = item.find((cur: any) => cur.sta_nm === sta_nm)
-  if (!existingBeach) return { message: NO_RESEARCH_MSG, testDate: '없음' }
-  const message = existingBeach.res_yn === '적합' ? '적합' : '미적합'
+  if (!existingBeach) return { message: NO_RESEARCH_MSG }
+  const ok = existingBeach.res_yn === '적합'
   // res_date(조사일자)는 timestamp 값인데 reduce 함수로 최대값, 즉 가장 최신의 조사일자를 의미한다
   const testDate = existingBeach.res_date || '없음'
-  return { message, testDate }
+  return { ok, testDate }
 }
 export { getBeach, getWeather, getWater, getSand }
