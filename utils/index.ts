@@ -59,4 +59,7 @@ const latLngToXy = ({ geoX, geoY }: LatLngTypes) => {
     rs: rs,
   }
 }
-export { cls, weatherToIcon, latLngToXy }
+const extractOnlyPhoneNum = (str: string) => {
+  return str.replace(/[^0-9|-]/g, '')
+}
+export { cls, weatherToIcon, latLngToXy, extractOnlyPhoneNum }

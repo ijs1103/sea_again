@@ -1,4 +1,4 @@
-import { cls } from '@utils/index'
+import { cls, extractOnlyPhoneNum } from '@utils/index'
 import { BeachResponse } from '@utils/interfaces'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -42,7 +42,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 							</li>
 							<li className='flex-1'>
 								<span className='block text-fontPrimary font-bold'>연락처</span>
-								<span className={cls('text-xs ', link_tel ? 'text-blue-500' : 'text-fontSecondary')}>{link_tel ? link_tel : '없음'}</span>
+								<span className={cls('text-xs ', link_tel ? 'text-blue-500' : 'text-fontSecondary')}>{link_tel ? extractOnlyPhoneNum(link_tel) : '없음'}</span>
 							</li>
 							<li className='flex-1'>
 								<span className='block text-fontPrimary font-bold'>홈페이지</span>
