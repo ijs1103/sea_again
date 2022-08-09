@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { TabType } from '@utils/interfaces'
 import { TAB_ARR } from '@utils/constants'
 import Weather from '@components/tabmenu/Weather'
+import WaterQuality from '@components/tabmenu/WaterQuality'
+import Sand from '@components/tabmenu/Sand'
 
 interface Props {
 	onModalClose: () => void
@@ -17,7 +19,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 	const isLiked = false
 
 	return (
-		<div className=''>
+		<>
 			<div onClick={() => onModalClose()} className='fixed top-0 w-full h-full bg-black opacity-60'></div>
 			<div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-xl bg-white">
 				<div className="w-full rounded-lg px-4 py-2">
@@ -60,16 +62,16 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 						</div>
 						<div className='h-[200px] w-full'>
 							{currentTab === '날씨' && <Weather {...{ lat, lon }} />}
-							{/* {currentTab === '수질' && <WaterQuality />}
-							{currentTab === '모래' && <Sand />}
-							{currentTab === '후기' && <Comment />} */}
+							{currentTab === '수질' && <WaterQuality {...{ sido_nm, sta_nm }} />}
+							{currentTab === '모래' && <Sand {...{ sido_nm, sta_nm }} />}
+							{/* {currentTab === '후기' && <Comment />} */}
 						</div>
 
 					</div>
 				</div>
 			</div>
 
-		</div>
+		</>
 	)
 }
 

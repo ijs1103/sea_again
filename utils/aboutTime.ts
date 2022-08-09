@@ -9,7 +9,7 @@ const getCurrentTime = () => {
   const base_time = ('0' + (newDate.getHours() - 1)).slice(-2) + '30'
   return { base_date: year + month + date, base_time }
 }
-/* ex) 23:00 => 오후 11시로 변환 */
+/* ex) 2300 => 오후 11시로 변환 */
 const convertHour = (hour: string) => {
   if (hour === '0000') return '밤 12시'
   if (hour === '1200') return '낮 12시'
@@ -18,5 +18,11 @@ const convertHour = (hour: string) => {
   }
   return `오전 ${hour?.slice(0, 2)}시`
 }
-
-export { getCurrentTime, convertHour }
+/* ex) 타임스탬프값 => 2019-12-15로 변환 */
+const timestampToDate = (ts: number) => {
+  const date = new Date(ts)
+  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
+    '0' + date.getDate()
+  ).slice(-2)}`
+}
+export { getCurrentTime, convertHour, timestampToDate }

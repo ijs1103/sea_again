@@ -4,7 +4,7 @@ import React from 'react'
 
 function SearchBar() {
 	return (
-		<Link href={'/search'}>
+		<Link href={'/searchBySido'}>
 			<a className='block absolute right-0 mt-4 mr-4 w-60'>
 				<label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
 				<div className="relative">

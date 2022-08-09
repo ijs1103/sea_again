@@ -33,7 +33,6 @@ function Weather({ lat, lon }: Props) {
 				</>
 			}
 		</div>
-
 	)
 }
 
