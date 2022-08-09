@@ -5,7 +5,8 @@ import React from 'react'
 function App() {
 	return (
 		<div className='h-screen w-full'>
-			<div className='fixed left-0 top-0 w-full h-full bg-[url("/beach_main.webp")] bg-cover bg-no-repeat blur-sm'>
+			<div className='fixed left-0 top-0 w-full h-full blur-sm'>
+				<Image className='object-cover' src={'/beach_main.webp'} layout="fill" priority alt='beach_main' />
 			</div>
 			<div className='fixed left-0 top-0 bottom-0 right-0 h-full max-w-4xl mx-auto flex flex-col justify-between items-center pb-16'>
 				<div className='select-none'>
