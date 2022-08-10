@@ -23,9 +23,9 @@ function searchBySido() {
 	}
 	return (
 		<MobileLayout isGoBack={true}>
-			<div className='flex flex-col items-center'>
+			<div className='mx-auto w-80'>
 				<div className='flex outline outline-gray-200 mb-10'>
-					<aside className="w-32" aria-label="Sidebar">
+					<aside className="w-2/5" aria-label="Sidebar">
 						<div className="bg-[#EBEBEB] text-[#757575]">
 							<ul >
 								{SIDO_ARR.map((sido, idx) =>
@@ -38,7 +38,7 @@ function searchBySido() {
 							</ul>
 						</div>
 					</aside>
-					<aside className="relative w-48 overflow-y-auto max-h-[500px]" aria-label="Sidebar">
+					<aside className="relative w-3/5 overflow-y-auto max-h-[500px]" aria-label="Sidebar">
 						<div className="px-6 py-6 ">
 							<ul className=" font-medium text-xs text-[#161616] bg-white">
 								{!isLoading && data?.map(beach =>
