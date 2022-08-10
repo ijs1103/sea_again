@@ -1,34 +1,30 @@
 import React from 'react'
 import MobileLayout from '@components/layout/MobileLayout'
 import FormLayout from '@components/layout/FormLayout'
-import { cls } from '@utils/index'
 import Link from 'next/link'
 import Button from '@components/layout/Button'
 import { useForm } from 'react-hook-form'
+import FormInput from '@components/input/FormInput'
+import { LoginForm } from '@utils/interfaces'
+import {
+	FORM_ERR_MSG,
+	PW_REGEX,
+	EMAIL_REGEX,
+} from '@utils/constants'
 
 function logIn() {
-	const isError = false
+	const { register, handleSubmit, formState } =
+		useForm<LoginForm>({ mode: "onChange" })
+	const onValid = (form: LoginForm) => {
+		//login 로직
+
+	}
 	return (
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='로그인'>
-				<form className='min-w-[500px] flex flex-col gap-3'>
-					<div>
-						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-						<div className="relative">
-							<div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-								<svg aria-hidden="true" className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
-							</div>
-							<input type="text" id="email" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg  focus:border-primary border-2 block w-full pl-10 p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="abcde@naver.com" />
-						</div>
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-
-					<div>
-						<label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-						<input type="password" id="password" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-
+				<form onSubmit={handleSubmit(onValid)} className='min-w-[500px] flex flex-col gap-3'>
+					<FormInput id={'email'} register={register("email", { required: true, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
+					<FormInput id={'password'} register={register("password", { required: true, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
 					<div className="my-4 flex justify-between items-center text-sm">
 						<div className='flex items-center'>
 							<input id="remember" type="checkbox" value="" className="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300" />

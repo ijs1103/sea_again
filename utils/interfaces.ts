@@ -47,3 +47,16 @@ export interface SandResponse {
   testDate?: string
   message?: string
 }
+export interface LoginForm {
+  email: string
+  password: string
+}
+export interface SignUpForm extends LoginForm {
+  name: string
+  confirm_password: string
+}
+export interface ProfileForm {
+  name: string
+  new_password: string
+  confirm_password: string
+}

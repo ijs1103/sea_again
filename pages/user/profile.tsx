@@ -3,13 +3,27 @@ import MobileLayout from '@components/layout/MobileLayout'
 import FormLayout from '@components/layout/FormLayout'
 import { cls } from '@utils/index'
 import Button from '@components/layout/Button'
+import { useForm } from 'react-hook-form'
+import FormInput from '@components/input/FormInput'
+import { ProfileForm } from '@utils/interfaces'
+import {
+	FORM_ERR_MSG, NAME_REGEX,
+	PW_REGEX,
+} from '@utils/constants'
 
 function profile() {
 	const isError = false
+	const { register, handleSubmit, formState, getValues } =
+		useForm<ProfileForm>({ mode: "onChange" })
+	const onValid = (form: ProfileForm) => {
+		//login 로직
+
+	}
 	return (
 		<MobileLayout isGoBack={false}>
-			<FormLayout label='프로필 수정'>
-				<form className='min-w-[500px] flex flex-col gap-3'>
+			<FormLayout label='프로필 변경'>
+				<form onSubmit={handleSubmit(onValid)} className='min-w-[500px] flex flex-col gap-3'>
+					<span className='text-primary text-[12px] text-right'>* 정보 변경을 위해 새 비밀번호를 입력 해주세요</span>
 					<div>
 						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
 						<div className="relative">
@@ -19,28 +33,11 @@ function profile() {
 							<input type="text" id="email" className={cls("brightness-75 opacity-75 outline-none bg-gray-50 text-gray-900 text-sm rounded-lg  focus:border-primary border-2 block w-full pl-10 p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="abcde@naver.com" disabled />
 						</div>
 					</div>
-					<div>
-						<label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
-						<div className="flex">
-							<span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300">
-								@
-							</span>
-							<input type="text" id="username" className={cls("outline-none rounded-r-lg bg-gray-50  text-gray-900 focus:border-primary border-2 block flex-1 min-w-0 w-full text-sm p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="elonmusk" />
-						</div>
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-					<div>
-						<label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-						<input type="password" id="password" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-					<div>
-						<label htmlFor="confirm_password" className="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-						<input type="password" id="confirm_password" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
+					<FormInput id={'name'} register={register("name", { required: FORM_ERR_MSG.required, pattern: { value: NAME_REGEX, message: FORM_ERR_MSG.invalidName } })} errorMsg={formState.errors['name']?.message} />
+					<FormInput id={'new_password'} register={register("new_password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['new_password']?.message} />
+					<FormInput id={'confirm_password'} register={register("confirm_password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw }, validate: { samePw: val => val === getValues('new_password') || FORM_ERR_MSG.invalidConfirmPw } })} errorMsg={formState.errors['confirm_password']?.message} />
 					<div className='mt-3'></div>
-					<Button>수정</Button>
+					<Button>변경</Button>
 				</form>
 			</FormLayout>
 		</MobileLayout>

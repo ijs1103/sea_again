@@ -1,46 +1,32 @@
 import React from 'react'
 import MobileLayout from '@components/layout/MobileLayout'
 import FormLayout from '@components/layout/FormLayout'
-import { cls } from '@utils/index'
 import Link from 'next/link'
 import Button from '@components/layout/Button'
-function signUp() {
-	const isError = true
+import { useForm } from 'react-hook-form'
+import FormInput from '@components/input/FormInput'
+import { SignUpForm } from '@utils/interfaces'
+import {
+	FORM_ERR_MSG, NAME_REGEX,
+	PW_REGEX,
+	EMAIL_REGEX,
+} from '@utils/constants'
 
+function signUp() {
+	const { register, handleSubmit, formState, getValues } =
+		useForm<SignUpForm>({ mode: "onChange" })
+	const onValid = (form: SignUpForm) => {
+		//회원가입 로직
+
+	}
 	return (
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='회원가입'>
-				<form className='min-w-[500px] flex flex-col gap-3'>
-					<div>
-						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-						<div className="relative">
-							<div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-								<svg aria-hidden="true" className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
-							</div>
-							<input type="text" id="email" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg  focus:border-primary border-2 block w-full pl-10 p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="abcde@naver.com" />
-						</div>
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-					<div>
-						<label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
-						<div className="flex">
-							<span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300">
-								@
-							</span>
-							<input type="text" id="username" className={cls("outline-none rounded-r-lg bg-gray-50  text-gray-900 focus:border-primary border-2 block flex-1 min-w-0 w-full text-sm p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="elonmusk" />
-						</div>
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-					<div>
-						<label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-						<input type="password" id="password" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
-					<div>
-						<label htmlFor="confirm_password" className="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-						<input type="password" id="confirm_password" className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", isError ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />
-						{/* <p className="mt-2 text-sm text-red-600"><span className="font-medium">Oh, snapp!</span> Some error message.</p> */}
-					</div>
+				<form onSubmit={handleSubmit(onValid)} className='min-w-[500px] flex flex-col gap-3'>
+					<FormInput id={'email'} register={register("email", { required: FORM_ERR_MSG.required, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
+					<FormInput id={'name'} register={register("name", { required: FORM_ERR_MSG.required, pattern: { value: NAME_REGEX, message: FORM_ERR_MSG.invalidName } })} errorMsg={formState.errors['name']?.message} />
+					<FormInput id={'password'} register={register("password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
+					<FormInput id={'confirm_password'} register={register("confirm_password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw }, validate: { samePw: val => val === getValues('password') || FORM_ERR_MSG.invalidConfirmPw } })} errorMsg={formState.errors['confirm_password']?.message} />
 					<Link href='/user/logIn'>
 						<a className="my-4 text-sm text-primary hover:underline text-right">로그인 하기</a>
 					</Link>

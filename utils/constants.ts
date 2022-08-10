@@ -40,6 +40,23 @@ const W_CATEGORY = {
   },
 } as const
 
+const idToLabel: { [key: string]: string } = {
+  email: '이메일',
+  name: '유저이름',
+  password: '비밀번호',
+  new_password: '새 비밀번호',
+  confirm_password: '비밀번호 확인',
+} as const
+const NAME_REGEX = /^[a-zA-Z]{5,10}$/
+const PW_REGEX = /^[a-zA-Z0-9]{8,16}$/
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const FORM_ERR_MSG = {
+  required: '해당란을 입력해주세요.',
+  invalidName: '5~10자의 영문 대 소문자만 사용 가능합니다.',
+  invalidPw: '8~16자 영문 대 소문자, 숫자를 사용하세요.',
+  invalidConfirmPw: '비밀번호가 일치하지 않습니다.',
+  invalidEmail: '올바른 이메일 패턴이 아닙니다.',
+} as const
 export {
   KAKAO_MAP_URL,
   WEATHER_BASE_URL,
@@ -50,4 +67,9 @@ export {
   W_CATEGORY,
   SIDO_ARR,
   TAB_ARR,
+  idToLabel,
+  NAME_REGEX,
+  PW_REGEX,
+  EMAIL_REGEX,
+  FORM_ERR_MSG,
 }
