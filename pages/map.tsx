@@ -5,6 +5,7 @@ import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { BeachResponse } from '@utils/interfaces'
+import MyMenu from '@components/layout/MyMenu';
 
 declare global {
 	interface Window {
@@ -118,6 +119,7 @@ function App() {
 				ref={mapRef}
 				className='shadow-2xl fixed top-0 left-0 w-full h-screen'
 			></div>
+			<MyMenu />
 			<SearchBar />
 			{beach && <SearchResult keyword={beach.sta_nm} />}
 			{beach && isModalOn && <Modal onModalClose={handleModalClose} beachData={beach} />}
