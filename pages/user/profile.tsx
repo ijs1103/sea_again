@@ -1,5 +1,6 @@
 import React from 'react'
 import MobileLayout from '@components/layout/MobileLayout'
+import FormLayout from '@components/layout/FormLayout'
 import { cls } from '@utils/index'
 import Button from '@components/layout/Button'
 
@@ -7,8 +8,7 @@ function profile() {
 	const isError = false
 	return (
 		<MobileLayout isGoBack={false}>
-			<div className='flex flex-col items-center gap-3'>
-				<h2 className='text-3xl font-bold'>프로필 수정</h2>
+			<FormLayout label='프로필 수정'>
 				<form className='min-w-[500px] flex flex-col gap-3'>
 					<div>
 						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
@@ -42,7 +42,7 @@ function profile() {
 					<div className='mt-3'></div>
 					<Button>수정</Button>
 				</form>
-			</div>
+			</FormLayout>
 		</MobileLayout>
 	)
 }

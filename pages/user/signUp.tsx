@@ -1,5 +1,6 @@
 import React from 'react'
 import MobileLayout from '@components/layout/MobileLayout'
+import FormLayout from '@components/layout/FormLayout'
 import { cls } from '@utils/index'
 import Link from 'next/link'
 import Button from '@components/layout/Button'
@@ -8,8 +9,7 @@ function signUp() {
 
 	return (
 		<MobileLayout isGoBack={false}>
-			<div className='flex flex-col items-center gap-3'>
-				<h2 className='text-3xl font-bold'>회원가입</h2>
+			<FormLayout label='회원가입'>
 				<form className='min-w-[500px] flex flex-col gap-3'>
 					<div>
 						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
@@ -46,7 +46,7 @@ function signUp() {
 					</Link>
 					<Button onClick={() => alert()}>가입</Button>
 				</form>
-			</div>
+			</FormLayout>
 		</MobileLayout>
 	)
 }
