@@ -60,3 +60,7 @@ export interface ProfileForm {
   new_password: string
   confirm_password: string
 }
+export interface ResponseType {
+  ok: boolean
+  [key: string]: any
+}

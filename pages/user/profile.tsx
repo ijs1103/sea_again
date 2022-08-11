@@ -4,7 +4,7 @@ import FormLayout from '@components/layout/FormLayout'
 import { cls } from '@utils/index'
 import Button from '@components/layout/Button'
 import { useForm } from 'react-hook-form'
-import FormInput from '@components/input/FormInput'
+import FormInput from '@components/FormInput'
 import { ProfileForm } from '@utils/interfaces'
 import {
 	FORM_ERR_MSG, NAME_REGEX,

@@ -7,7 +7,7 @@ function MyMenu() {
 	const isLogin = false
 	const toggleDropDown = () => setActive((prev: any) => !prev)
 	return (
-		<div className='z-10 cursor-pointer absolute left-0 mt-4 ml-4'>
+		<div className='cursor-pointer absolute left-0 mt-4 ml-4'>
 			<button type='button' onClick={toggleDropDown} className='rounded-full bg-primary hover:brightness-75 transition-all p-2'>
 				<span className="sr-only">Open my menu</span>
 				<svg className="w-6 h-6 text-white " stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
