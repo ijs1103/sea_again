@@ -5,19 +5,28 @@ import Link from 'next/link'
 import Button from '@components/layout/Button'
 import { useForm } from 'react-hook-form'
 import FormInput from '@components/FormInput'
-import { SignUpForm } from '@utils/interfaces'
+import { SignUpForm, AccountType, ResponseType } from '@utils/interfaces'
 import {
 	FORM_ERR_MSG, NAME_REGEX,
 	PW_REGEX,
 	EMAIL_REGEX,
 } from '@utils/constants'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import { createAccount } from '@utils/axiosFunctions/ownApi'
 
 function signUp() {
 	const { register, handleSubmit, formState, getValues } =
 		useForm<SignUpForm>({ mode: "onChange" })
+	const { data, mutate: signUpMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, AccountType>(createAccount, {
+		onSuccess: ({ data }) => {
+			data.ok ? alert('성공적으로 가입되었습니다') : alert(data.error)
+		},
+		onError: (error) => console.log('axios 에러 : ', error)
+	})
 	const onValid = (form: SignUpForm) => {
-		//회원가입 로직
-
+		const { email, name, password } = form
+		signUpMutate({ email, name, password })
 	}
 	return (
 		<MobileLayout isGoBack={false}>

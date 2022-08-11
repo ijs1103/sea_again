@@ -55,6 +55,11 @@ export interface SignUpForm extends LoginForm {
   name: string
   confirm_password: string
 }
+export interface AccountType {
+  email: string
+  name: string
+  password: string
+}
 export interface ProfileForm {
   name: string
   new_password: string

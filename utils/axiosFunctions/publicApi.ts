@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { WeatherParams, BeachParams } from '@utils/interfaces'
 import {
   WEATHER_BASE_URL,
   BEACH_BASE_URL,
@@ -115,7 +114,6 @@ const getSand = async (SIDO_NM: string, sta_nm: string) => {
   } = await axios.get<any>(SAND_BASE_URL, {
     params,
   })
-  console.log(item)
   // sta_nm(해수욕장 이름)이 수질확인 api 데이터와 일치하는 데이터를 찾고,
   // 해당 배열의 res_yn(적합여부)가 전부 "적합"이면 적합 판정 O , 하나의 res_yn(적합여부)라도 "부적합"이면 적합 판정 X
   const existingBeach = item.find((cur: any) => cur.sta_nm === sta_nm)
@@ -125,4 +123,5 @@ const getSand = async (SIDO_NM: string, sta_nm: string) => {
   const testDate = existingBeach.res_date || '없음'
   return { ok, testDate }
 }
+
 export { getBeach, getWeather, getWater, getSand }

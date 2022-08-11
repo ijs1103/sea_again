@@ -1,5 +1,5 @@
 import React from 'react'
-import { getSand } from '@utils/openApi'
+import { getSand } from '@utils/axiosFunctions/publicApi'
 import { cls } from '@utils/index'
 import { useQuery } from '@tanstack/react-query'
 import Loader from '@components/Loader'
