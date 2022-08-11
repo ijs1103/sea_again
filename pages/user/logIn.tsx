@@ -11,13 +11,29 @@ import {
 	PW_REGEX,
 	EMAIL_REGEX,
 } from '@utils/constants'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import { userLogIn } from '@utils/axiosFunctions/ownApi'
+import { useRouter } from 'next/router'
 
-function logIn() {
+function LogIn() {
+	const router = useRouter()
 	const { register, handleSubmit, formState } =
 		useForm<LoginForm>({ mode: "onChange" })
+	const { mutate: loginMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, LoginForm>(userLogIn, {
+		onSuccess: ({ data }) => {
+			if (data.ok) {
+				alert('로그인 성공!!')
+				router.push('/')
+			} else {
+				alert(data.error)
+			}
+		},
+		onError: (error) => console.log('axios 에러 : ', error)
+	})
 	const onValid = (form: LoginForm) => {
 		//login 로직
-
+		loginMutate({ ...form })
 	}
 	return (
 		<MobileLayout isGoBack={false}>
@@ -41,4 +57,4 @@ function logIn() {
 	)
 }
 
-export default logIn
+export default LogIn

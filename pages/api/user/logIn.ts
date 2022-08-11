@@ -3,6 +3,8 @@ import client from '@libs/client'
 import { ResponseType } from '@utils/interfaces'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { setCookie } from 'cookies-next'
+
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
@@ -16,6 +18,13 @@ async function handler(
   if (!isPwCorrect)
     return res.json({ ok: false, error: '올바른 비밀번호가 아닙니다.' })
   const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY as string)
+  setCookie('token', token, {
+    req,
+    res,
+    httpOnly: true,
+    sameSite: 'strict',
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  })
   res.json({
     ok: true,
     token,

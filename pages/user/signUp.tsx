@@ -14,13 +14,20 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { createAccount } from '@utils/axiosFunctions/ownApi'
+import { useRouter } from 'next/router'
 
-function signUp() {
+function SignUp() {
+	const router = useRouter()
 	const { register, handleSubmit, formState, getValues } =
 		useForm<SignUpForm>({ mode: "onChange" })
-	const { data, mutate: signUpMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, AccountType>(createAccount, {
+	const { mutate: signUpMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, AccountType>(createAccount, {
 		onSuccess: ({ data }) => {
-			data.ok ? alert('성공적으로 가입되었습니다') : alert(data.error)
+			if (data.ok) {
+				alert('가입을 축하합니다!!')
+				router.push('/user/logIn')
+			} else {
+				alert(data.error)
+			}
 		},
 		onError: (error) => console.log('axios 에러 : ', error)
 	})
@@ -46,4 +53,4 @@ function signUp() {
 	)
 }
 
-export default signUp
+export default SignUp
