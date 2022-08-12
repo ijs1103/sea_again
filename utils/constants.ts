@@ -56,6 +56,8 @@ const FORM_ERR_MSG = {
   invalidPw: '8~16자 영문 대 소문자, 숫자를 사용하세요.',
   invalidConfirmPw: '비밀번호가 일치하지 않습니다.',
   invalidEmail: '올바른 이메일 패턴이 아닙니다.',
+  samePrevName: '이전과 다른 유저이름을 입력해주세요.',
+  samePrevPw: '이전과 다른 비밀번호를 입력해주세요.',
 } as const
 export {
   KAKAO_MAP_URL,

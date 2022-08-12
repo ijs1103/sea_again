@@ -9,7 +9,10 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   // 쿠키를 받아와서 유저가 존재하는지 확인
-  const token = getCookie('token')
+  const token = getCookie('token', { req, res })
+  console.log(token)
+  // 쿠키가 없을때 처리
+  if (!token) return res.json({ ok: false })
   const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   const user = await client.user.findUnique({ where: { id } })
   if (!user) return res.json({ ok: false })

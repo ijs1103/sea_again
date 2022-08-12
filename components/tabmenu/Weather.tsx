@@ -37,3 +37,4 @@ function Weather({ lat, lon }: Props) {
 }
 
 export default Weather
+

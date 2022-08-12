@@ -1,12 +1,20 @@
 import axios from 'axios'
-import { AccountType, LoginForm } from '@utils/interfaces'
+import { AccountType, EditAccountType, LoginForm } from '@utils/interfaces'
 
+const authFetcher = () => {
+  const res = axios.get('/api/user/validateUser')
+  return res
+}
 const createAccount = async (newAccount: AccountType) => {
   const res = await axios.post('/api/user/signUp', newAccount)
+  return res
+}
+const editAccount = async (editAccount: EditAccountType) => {
+  const res = await axios.put('/api/user/editProfile', editAccount)
   return res
 }
 const userLogIn = async (logInParams: LoginForm) => {
   const res = await axios.post('/api/user/logIn', logInParams)
   return res
 }
-export { createAccount, userLogIn }
+export { authFetcher, createAccount, userLogIn, editAccount }

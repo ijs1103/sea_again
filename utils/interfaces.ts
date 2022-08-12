@@ -60,6 +60,10 @@ export interface AccountType {
   name: string
   password: string
 }
+export interface EditAccountType {
+  name?: string
+  password: string
+}
 export interface ProfileForm {
   name: string
   new_password: string

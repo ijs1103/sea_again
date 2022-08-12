@@ -7,8 +7,9 @@ interface Props {
 	id: string
 	errorMsg: string | undefined
 	register: UseFormRegisterReturn
+	namePlaceholder?: string
 }
-function FormInput({ id, register, errorMsg }: Props) {
+function FormInput({ id, register, errorMsg, namePlaceholder }: Props) {
 	return (
 		<div>
 			<label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-900">{idToLabel[id]}</label>
@@ -25,7 +26,7 @@ function FormInput({ id, register, errorMsg }: Props) {
 					<span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300">
 						@
 					</span>
-					<input type="text" {...register} id={id} className={cls("outline-none rounded-r-lg bg-gray-50  text-gray-900 focus:border-primary border-2 block flex-1 min-w-0 w-full text-sm p-2.5 ", errorMsg ? 'border-red-500' : 'border-gray-300')} placeholder="elonmusk" />
+					<input type="text" {...register} id={id} className={cls("outline-none rounded-r-lg bg-gray-50  text-gray-900 focus:border-primary border-2 block flex-1 min-w-0 w-full text-sm p-2.5 ", errorMsg ? 'border-red-500' : 'border-gray-300')} placeholder={namePlaceholder || '이름을 입력해주세요'} />
 				</div>
 			}
 			{['password', 'new_password', 'confirm_password'].includes(id) && <input type="password" {...register} id={id} className={cls("outline-none bg-gray-50 text-gray-900 text-sm rounded-lg focus:border-primary border-2 block w-full p-2.5 ", errorMsg ? 'border-red-500' : 'border-gray-300')} placeholder="•••••••••" />

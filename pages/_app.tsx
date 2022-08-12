@@ -3,24 +3,18 @@ import type { AppProps } from 'next/app'
 import {
   QueryClient,
   QueryClientProvider,
-  QueryFunctionContext
+  Hydrate
 } from '@tanstack/react-query'
 
-// defaultOptions: {
-//   queries: {
-//     // 공통 fetch 함수 설정
-//     queryFn: ({ queryKey }: QueryFunctionContext) => fetch(queryKey.join("")).then(res => res.json()),
-//   },
-// },
-
-const queryClient = new QueryClient({});
-
 function MyApp({ Component, pageProps }: AppProps) {
+  const queryClient = new QueryClient({});
   return (
     <QueryClientProvider client={queryClient}>
-      <div className='h-screen'>
+      <Hydrate state={pageProps.dehydratedState}>
         <Component {...pageProps} />
-      </div>
+        {/* <div className='h-screen'>
+        </div> */}
+      </Hydrate>
     </QueryClientProvider>
   )
 }
