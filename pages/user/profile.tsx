@@ -15,7 +15,6 @@ import useAuth from '@hooks/useAuth'
 
 function Profile() {
 	const { profile, loading } = useAuth()
-	console.log(profile)
 	const { register, handleSubmit, formState, getValues } =
 		useForm<ProfileForm>({ mode: "onChange" })
 	const onValid = (form: ProfileForm) => {
