@@ -62,4 +62,14 @@ const latLngToXy = ({ geoX, geoY }: LatLngTypes) => {
 const extractOnlyPhoneNum = (str: string) => {
   return str.replace(/[^0-9|-]/g, '')
 }
-export { cls, weatherToIcon, latLngToXy, extractOnlyPhoneNum }
+const parseCookies = (cookie = '') => {
+  return cookie
+    .split(';')
+    .map((v) => v.split('='))
+    .map(([k, ...vs]) => [k, vs.join('=')])
+    .reduce((acc: any, [k, v]) => {
+      acc[k.trim()] = decodeURIComponent(v)
+      return acc
+    }, {})
+}
+export { cls, weatherToIcon, latLngToXy, extractOnlyPhoneNum, parseCookies }

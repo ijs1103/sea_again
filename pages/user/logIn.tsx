@@ -13,6 +13,7 @@ import {
 } from '@utils/constants'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import { ResponseType } from '@utils/interfaces'
 import { userLogIn } from '@utils/axiosFunctions/ownApi'
 import { useRouter } from 'next/router'
 

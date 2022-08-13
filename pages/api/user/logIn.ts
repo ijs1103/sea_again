@@ -21,7 +21,6 @@ async function handler(
   setCookie('token', token, {
     req,
     res,
-    httpOnly: true,
     sameSite: 'strict',
     maxAge: 1000 * 60 * 60 * 24 * 7,
   })

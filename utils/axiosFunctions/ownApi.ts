@@ -17,4 +17,9 @@ const userLogIn = async (logInParams: LoginForm) => {
   const res = await axios.post('/api/user/logIn', logInParams)
   return res
 }
-export { authFetcher, createAccount, userLogIn, editAccount }
+const userLogOut = async () => {
+  const res = await axios.post('/api/user/logOut')
+  return res
+}
+
+export { authFetcher, createAccount, userLogIn, editAccount, userLogOut }

@@ -16,7 +16,7 @@ import { editAccount } from '@utils/axiosFunctions/ownApi'
 import { EditAccountType, ResponseType } from '@utils/interfaces'
 
 function Profile() {
-	const { profile, loading } = useAuth()
+	const { profile, loading } = useAuth('auth')
 	const { register, handleSubmit, formState, getValues } =
 		useForm<ProfileForm>({ mode: "onChange" })
 	const { mutate: editProfileMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, EditAccountType>(editAccount, {

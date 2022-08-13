@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Props {
   children: React.ReactNode;
@@ -6,11 +7,11 @@ interface Props {
 }
 
 function MobileLayout({ children, isGoBack }: Props) {
-
+  const router = useRouter()
   return (
     <div className="h-screen max-w-xl mx-auto bg-white">
-      {isGoBack ? <Link href={'/search'}>
-        <a className="block my-3">
+      {isGoBack ?
+        <a onClick={() => router.back()} className="block my-3">
           <svg
             className="w-6 h-6"
             fill="currentColor"
@@ -24,10 +25,10 @@ function MobileLayout({ children, isGoBack }: Props) {
             />
           </svg>
         </a>
-      </Link> : <Link href={'/map'}>
-        <a className="block my-3">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-        </a></Link>}
+        : <Link href={'/map'}>
+          <a className="block my-3">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </a></Link>}
       {children}
     </div>
   );
