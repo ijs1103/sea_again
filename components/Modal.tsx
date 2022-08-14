@@ -12,7 +12,7 @@ import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
 import { toggleLikeFetcher, getBeachByName } from '@utils/axiosFunctions/ownApi'
 import { Beach } from '@prisma/client'
-
+import useAuth from '@hooks/useAuth'
 
 interface Props {
 	onModalClose: () => void
@@ -26,12 +26,15 @@ interface BeachByNameRes {
 }
 
 const Modal = ({ onModalClose, beachData }: Props) => {
+	const { isLogin } = useAuth('getProfile')
 	const queryClient = useQueryClient()
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const { data } = useQuery<any>(['beachByName', gugun_nm, sta_nm], () => getBeachByName(`${gugun_nm} ${sta_nm}`))
-	const { mutate: toggleLike, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
+	const { mutate: toggleLike, data: toggleLikeRes } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
 	const handleLikeclick = useCallback(() => {
+		// 로그인을 한 상태가 아니라면 좋아요 로직이 실행되지 않도록 
+		if (!isLogin) return
 		toggleLike(`${gugun_nm} ${sta_nm}`)
 		// setQueryData: 리액트 쿼리의 캐시 데이터를 동기적으로 즉시 업데이트 하는 함수 , 좋아요를 누르면 즉시 화면에 반영이 되도록 캐시를 업데이트 해주었습니다
 		queryClient.setQueryData(['beachByName', gugun_nm, sta_nm], (prev: any) => { return { ...prev, isLiked: !prev?.isLiked } })

@@ -14,6 +14,7 @@ export default async function handler(
   console.log(name)
   // jwt 토큰 검증
   const token = parseCookies(req.headers.cookie)['token']
+  if (!token) return res.json({ ok: false })
   const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   const beach = await client.beach.findUnique({
     where: {
