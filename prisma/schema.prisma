@@ -35,8 +35,8 @@ model Like {
   id              Int         @id @default(autoincrement())
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  beach   Beach  @relation(fields: [beachId], references: [id], onDelete: Cascade)
-  beachId Int
+  beach   Beach  @relation(fields: [beachName], references: [name], onDelete: Cascade)
+  beachName String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -45,8 +45,8 @@ model Review {
   payload String
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  beach   Beach  @relation(fields: [beachId], references: [id], onDelete: Cascade)
-  beachId Int
+  beach   Beach  @relation(fields: [beachName], references: [name], onDelete: Cascade)
+  beachName String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

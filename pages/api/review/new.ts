@@ -20,7 +20,7 @@ async function handler(
       name: beachName,
     },
   })
-  await client.review.create({
+  const review = await client.review.create({
     data: {
       payload,
       user: {
@@ -34,9 +34,17 @@ async function handler(
         },
       },
     },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
   })
   res.json({
     ok: true,
+    review,
   })
 }
 

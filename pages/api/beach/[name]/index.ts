@@ -16,7 +16,18 @@ export default async function handler(
       name: name?.toString(),
     },
     include: {
-      reviews: true,
+      reviews: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   })
   // jwt 토큰 검증

@@ -35,8 +35,8 @@ const getBeachByName = async (beachName: string) => {
   return data
 }
 const createReview = async (createReview: createReviewType) => {
-  const res = await axios.post('/api/review/new', createReview)
-  return res
+  const { data } = await axios.post('/api/review/new', createReview)
+  return data
 }
 export {
   authFetcher,

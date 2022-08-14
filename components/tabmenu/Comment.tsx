@@ -2,7 +2,6 @@ import Message from '@components/layout/Message'
 import { Review } from '@prisma/client'
 import { cls } from '@utils/index'
 import { ResponseType, createReviewType } from '@utils/interfaces'
-import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { createReview } from '@utils/axiosFunctions/ownApi'
 import { useForm } from 'react-hook-form'
@@ -11,28 +10,46 @@ import {
 	FORM_ERR_MSG
 } from '@utils/constants'
 import useAuth from '@hooks/useAuth'
+import { useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+
+interface ReviewWith extends Review {
+	review: Review
+	user: {
+		name: string
+	}
+}
 interface Props {
-	reviews: Review[]
 	beachName: string
 }
 interface CommentForm {
 	payload: string
 }
-function Comment({ reviews, beachName }: Props) {
+function Comment({ beachName }: Props) {
+	const queryClient = useQueryClient()
 	const { isLogin } = useAuth('getProfile')
-	const { register, handleSubmit, formState } =
+	const { register, handleSubmit, formState, reset } =
 		useForm<CommentForm>({ mode: 'onChange' })
 
-	const { mutate: newComment, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {
+	const { data, mutate: newComment, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {
 		onSuccess: ({ data }) => {
 			if (!data.ok) alert('로그인 후 후기를 작성해주세요.')
 		},
 		onError: (error) => console.log('axios 에러 : ', error)
 	})
-
+	console.log(data)
 	const onValid = (form: CommentForm) => {
 		newComment({ ...form, beachName })
+		reset({ "payload": "" })
+
+		queryClient.setQueryData(['beachByName', beachName], data?.review)
+
 	}
+	//(prev: any) => { return { ...prev, beach: { ...prev?.beach, reviews: [...prev?.beach.reviews, data?.review] } } }
+	const parseCreatedAt = useCallback((createdAt: Date) => {
+		const parsed = createdAt?.toString()
+		return `${parsed?.slice(0, 4)} ${parsed?.slice(5, 10)} ${parsed?.slice(11, 16)}`
+	}, [])
 	return (
 		<div className='p-2'>
 			<form onSubmit={handleSubmit(onValid)}>
@@ -48,10 +65,7 @@ function Comment({ reviews, beachName }: Props) {
 
 			</form>
 			<div className='mt-4 space-y-2'>
-				<Message reviewDate='09-11 13:52' userName='유저1' review='테스트 테스트 테스트테스트테스트테스트 테스트 테스트 테스트테스트테스트테스트테스트 테스트 테스트테스트테스트테스트테스트 테스트 테스트테스트테스트테스트테스트 테스트 테스트테스트테스트테스트' />
-				<Message reviewDate='09-11 13:52' userName='유저1' review='테스트 테스트 테스트테스트테스트테스트' />
-				<Message reviewDate='09-11 13:52' userName='유저1' review='테스트 테스트 테스트테스트테스트테스트' />
-				<Message reviewDate='09-11 13:52' userName='유저1' review='테스트 테스트 테스트테스트테스트테스트' />
+				{reviews?.map(review => <Message key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} />)}
 			</div>
 
 		</div>

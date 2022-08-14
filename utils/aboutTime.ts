@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 const getCurrentTime = () => {
   const newDate = new Date()
   const year = newDate.getFullYear() + ''
@@ -25,4 +27,8 @@ const timestampToDate = (ts: number) => {
     '0' + date.getDate()
   ).slice(-2)}`
 }
-export { getCurrentTime, convertHour, timestampToDate }
+const parseCreatedAt = (createdAt: Date) => {
+  const parsed = createdAt.toString()
+  return `${parsed.slice(0, 4)} ${parsed.slice(5, 10)} ${parsed.slice(11, 16)}`
+}
+export { getCurrentTime, convertHour, timestampToDate, parseCreatedAt }
