@@ -7,6 +7,10 @@ import { TAB_ARR } from '@utils/constants'
 import Weather from '@components/tabmenu/Weather'
 import WaterQuality from '@components/tabmenu/WaterQuality'
 import Sand from '@components/tabmenu/Sand'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import { ResponseType } from '@utils/interfaces'
+import { toggleLikeFetcher } from '@utils/axiosFunctions/ownApi'
 
 interface Props {
 	onModalClose: () => void
@@ -17,7 +21,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const isLiked = false
-
+	const { mutate: toggleLike, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError>(toggleLikeFetcher)
 	return (
 		<>
 			<div onClick={() => onModalClose()} className='fixed top-0 w-full h-full bg-black opacity-60'></div>

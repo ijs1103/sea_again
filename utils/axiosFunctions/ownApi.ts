@@ -21,5 +21,6 @@ const userLogOut = async () => {
   const res = await axios.post('/api/user/logOut')
   return res
 }
+const toggleLikeFetcher = async () => {}
 
 export { authFetcher, createAccount, userLogIn, editAccount, userLogOut }
