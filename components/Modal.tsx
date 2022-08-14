@@ -20,7 +20,7 @@ interface Props {
 }
 
 interface BeachByNameRes {
-	isLiked: boolean
+	isLiked?: boolean
 	beach: Beach
 	ok: boolean
 }
@@ -31,7 +31,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const { data } = useQuery<any>(['beachByName', gugun_nm, sta_nm], () => getBeachByName(`${gugun_nm} ${sta_nm}`))
-	const { mutate: toggleLike, data: toggleLikeRes } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
+	const { mutate: toggleLike } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
 	const handleLikeclick = useCallback(() => {
 		// 로그인을 한 상태가 아니라면 좋아요 로직이 실행되지 않도록 
 		if (!isLogin) return
@@ -54,7 +54,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 								<h3 className='text-fontPrimary font-bold text-xl'>{sta_nm}</h3>
 								<span className='text-fontSecondary text-xs'>{sido_nm} {gugun_nm}</span>
 							</div>
-							<svg onClick={handleLikeclick} className={cls("w-8 h-8 text-red-500 ", data?.isLiked ? "fill-red-500" : "")} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+							<svg onClick={handleLikeclick} className={cls("cursor-pointer w-8 h-8 text-red-500 ", data?.isLiked ? "fill-red-500" : "")} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
 						</div>
 						<ul className='w-[400px] flex justify-center text-center'>
 							<li className='flex-1'>

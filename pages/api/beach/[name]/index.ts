@@ -11,15 +11,16 @@ export default async function handler(
   const {
     query: { name },
   } = req
-  // jwt 토큰 검증
-  const token = parseCookies(req.headers.cookie)['token']
-  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
-
   const beach = await client.beach.findUnique({
     where: {
       name: name?.toString(),
     },
   })
+  // jwt 토큰 검증
+  const token = parseCookies(req.headers.cookie)['token']
+  // 로그인 하지 않았으면 isLiked(좋아요 여부) 리턴하지 않음
+  if (!token) return res.json({ ok: true, beach })
+  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   // 좋아요 여부
   const isLiked = Boolean(
     await client.like.findFirst({
