@@ -1,5 +1,10 @@
 import axios from 'axios'
-import { AccountType, EditAccountType, LoginForm } from '@utils/interfaces'
+import {
+  AccountType,
+  EditAccountType,
+  LoginForm,
+  createReviewType,
+} from '@utils/interfaces'
 
 const authFetcher = () => {
   const res = axios.get('/api/user/validateUser')
@@ -29,6 +34,10 @@ const getBeachByName = async (beachName: string) => {
   const { data } = await axios.get(`/api/beach/${beachName}`)
   return data
 }
+const createReview = async (createReview: createReviewType) => {
+  const res = await axios.post('/api/review/new', createReview)
+  return res
+}
 export {
   authFetcher,
   createAccount,
@@ -37,4 +46,5 @@ export {
   userLogOut,
   toggleLikeFetcher,
   getBeachByName,
+  createReview,
 }

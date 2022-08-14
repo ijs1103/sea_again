@@ -7,6 +7,7 @@ import { TAB_ARR } from '@utils/constants'
 import Weather from '@components/tabmenu/Weather'
 import WaterQuality from '@components/tabmenu/WaterQuality'
 import Sand from '@components/tabmenu/Sand'
+import Comment from '@components/tabmenu/Comment'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
@@ -81,11 +82,11 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 								</li>)}
 							</ul>
 						</div>
-						<div className='h-[200px] w-full'>
+						<div className='h-[200px] w-full overflow-y-auto'>
 							{currentTab === '날씨' && <Weather {...{ lat, lon }} />}
 							{currentTab === '수질' && <WaterQuality {...{ sido_nm, sta_nm }} />}
 							{currentTab === '모래' && <Sand {...{ sido_nm, sta_nm }} />}
-							{/* {currentTab === '후기' && <Comment />} */}
+							{currentTab === '후기' && <Comment {...{ reviews: data?.reviews, beachName: `${gugun_nm} ${sta_nm}` }} />}
 						</div>
 
 					</div>

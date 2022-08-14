@@ -91,6 +91,11 @@
     "semver" "^7.3.5"
     "tar" "^6.1.11"
 
+"@neojp/tailwindcss-line-clamp-utilities@^1.0.1":
+  "integrity" "sha512-DAzEbTSM7NLxTeWUdbipB3MNt/MesveqXRAnbLX/yNnzpqxRhakzFls/kY4r5LWFGSNl+AHe9khOd27wcp6Ylw=="
+  "resolved" "https://registry.npmjs.org/@neojp/tailwindcss-line-clamp-utilities/-/tailwindcss-line-clamp-utilities-1.0.1.tgz"
+  "version" "1.0.1"
+
 "@next/env@12.2.3":
   "integrity" "sha512-2lWKP5Xcvnor70NaaROZXBvU8z9mFReePCG8NhZw6NyNGnPvC+8s+Cre/63LAB1LKzWw/e9bZJnQUg0gYFRb2Q=="
   "resolved" "https://registry.npmjs.org/@next/env/-/env-12.2.3.tgz"

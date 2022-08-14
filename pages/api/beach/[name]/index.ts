@@ -15,6 +15,9 @@ export default async function handler(
     where: {
       name: name?.toString(),
     },
+    include: {
+      reviews: true,
+    },
   })
   // jwt 토큰 검증
   const token = parseCookies(req.headers.cookie)['token']

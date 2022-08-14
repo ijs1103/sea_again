@@ -73,3 +73,7 @@ export interface ResponseType {
   ok: boolean
   [key: string]: any
 }
+export interface createReviewType {
+  payload: string
+  beachName: string
+}
