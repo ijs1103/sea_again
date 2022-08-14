@@ -21,6 +21,20 @@ const userLogOut = async () => {
   const res = await axios.post('/api/user/logOut')
   return res
 }
-const toggleLikeFetcher = async () => {}
-
-export { authFetcher, createAccount, userLogIn, editAccount, userLogOut }
+const toggleLikeFetcher = async (beachName: string) => {
+  const res = await axios.post(`/api/beach/${beachName}/toggleLike`)
+  return res
+}
+const getBeachByName = async (beachName: string) => {
+  const { data } = await axios.get(`/api/beach/${beachName}`)
+  return data
+}
+export {
+  authFetcher,
+  createAccount,
+  userLogIn,
+  editAccount,
+  userLogOut,
+  toggleLikeFetcher,
+  getBeachByName,
+}

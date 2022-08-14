@@ -4,20 +4,29 @@ import { parseCookies } from '@utils/index'
 import jwt from 'jsonwebtoken'
 import client from '@libs/client'
 
-async function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    query: { id: beachId },
+    query: { name },
   } = req
-
+  console.log(name)
+  // jwt 토큰 검증
   const token = parseCookies(req.headers.cookie)['token']
   const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
+  const beach = await client.beach.findUnique({
+    where: {
+      name: name?.toString(),
+    },
+    select: {
+      id: true,
+    },
+  })
   const existingLike = await client.like.findFirst({
     where: {
       userId: id,
-      beachId: +beachId.toString(),
+      beachId: beach?.id,
     },
   })
   if (existingLike) {
@@ -36,7 +45,7 @@ async function handler(
         },
         beach: {
           connect: {
-            id: +beachId.toString(),
+            id: beach?.id,
           },
         },
       },

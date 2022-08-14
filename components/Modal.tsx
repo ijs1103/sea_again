@@ -1,27 +1,41 @@
 import { cls, extractOnlyPhoneNum } from '@utils/index'
 import { BeachResponse } from '@utils/interfaces'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useCallback, useState, } from 'react'
 import { TabType } from '@utils/interfaces'
 import { TAB_ARR } from '@utils/constants'
 import Weather from '@components/tabmenu/Weather'
 import WaterQuality from '@components/tabmenu/WaterQuality'
 import Sand from '@components/tabmenu/Sand'
-import { useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
-import { toggleLikeFetcher } from '@utils/axiosFunctions/ownApi'
+import { toggleLikeFetcher, getBeachByName } from '@utils/axiosFunctions/ownApi'
+import { Beach } from '@prisma/client'
+
 
 interface Props {
 	onModalClose: () => void
 	beachData: BeachResponse
 }
 
+interface BeachByNameRes {
+	isLiked: boolean
+	beach: Beach
+	ok: boolean
+}
+
 const Modal = ({ onModalClose, beachData }: Props) => {
+	const queryClient = useQueryClient()
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
-	const isLiked = false
-	const { mutate: toggleLike, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError>(toggleLikeFetcher)
+	const { data } = useQuery<any>(['beachByName', gugun_nm, sta_nm], () => getBeachByName(`${gugun_nm} ${sta_nm}`))
+	const { mutate: toggleLike, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
+	const handleLikeclick = useCallback(() => {
+		toggleLike(`${gugun_nm} ${sta_nm}`)
+		// setQueryData: 리액트 쿼리의 캐시 데이터를 동기적으로 즉시 업데이트 하는 함수 , 좋아요를 누르면 즉시 화면에 반영이 되도록 캐시를 업데이트 해주었습니다
+		queryClient.setQueryData(['beachByName', gugun_nm, sta_nm], (prev: any) => { return { ...prev, isLiked: !prev?.isLiked } })
+	}, [])
 	return (
 		<>
 			<div onClick={() => onModalClose()} className='fixed top-0 w-full h-full bg-black opacity-60'></div>
@@ -37,7 +51,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 								<h3 className='text-fontPrimary font-bold text-xl'>{sta_nm}</h3>
 								<span className='text-fontSecondary text-xs'>{sido_nm} {gugun_nm}</span>
 							</div>
-							<svg className={cls("w-8 h-8 text-red-500 ", isLiked ? "fill-red-500" : "")} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+							<svg onClick={handleLikeclick} className={cls("w-8 h-8 text-red-500 ", data?.isLiked ? "fill-red-500" : "")} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
 						</div>
 						<ul className='w-[400px] flex justify-center text-center'>
 							<li className='flex-1'>
