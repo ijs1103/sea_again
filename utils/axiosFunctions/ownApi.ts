@@ -4,6 +4,7 @@ import {
   EditAccountType,
   LoginForm,
   createReviewType,
+  getReviewsType,
 } from '@utils/interfaces'
 
 const authFetcher = () => {
@@ -38,6 +39,12 @@ const createReview = async (createReview: createReviewType) => {
   const { data } = await axios.post('/api/review/new', createReview)
   return data
 }
+const getReviews = async (getReviews: getReviewsType) => {
+  const { data } = await axios.get('/api/review/all', {
+    params: getReviews,
+  })
+  return data
+}
 export {
   authFetcher,
   createAccount,
@@ -47,4 +54,5 @@ export {
   toggleLikeFetcher,
   getBeachByName,
   createReview,
+  getReviews,
 }

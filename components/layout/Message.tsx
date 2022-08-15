@@ -12,7 +12,7 @@ function Message({ userName, payload, reviewDate }: Props) {
 			<div className=' w-1/2'>
 				<span className='block w-full text-left group-even:text-right text-xs font-bold'>{userName}</span>
 				<div className="mt-2 mb-1 text-sm bg-oddComment group-even:bg-evenComment text-gray-700 p-2 border border-gray-300 rounded-md">
-					<p className='line-clamp-3'>{payload}</p>
+					<p className='text-xs line-clamp-3'>{payload}</p>
 				</div>
 				<span className='block w-full text-left group-even:text-right text-[10px] text-gray-500'>{reviewDate}</span>
 			</div>

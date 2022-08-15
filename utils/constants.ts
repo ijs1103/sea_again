@@ -50,7 +50,7 @@ const idToLabel: { [key: string]: string } = {
 const NAME_REGEX = /^[a-zA-Z]{5,10}$/
 const PW_REGEX = /^[a-zA-Z0-9]{8,16}$/
 const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-const REVIEW_REGEX = /^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 \t]{5,}$/
+const REVIEW_REGEX = /^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 \t\n]{5,}$/
 const FORM_ERR_MSG = {
   required: '해당란을 입력해주세요.',
   invalidName: '5~10자의 영문 대 소문자만 사용 가능합니다.',
@@ -61,6 +61,7 @@ const FORM_ERR_MSG = {
   samePrevName: '이전과 다른 유저이름을 입력해주세요.',
   samePrevPw: '이전과 다른 비밀번호를 입력해주세요.',
 } as const
+const PAGE_LIMIT = 5
 export {
   KAKAO_MAP_URL,
   WEATHER_BASE_URL,
@@ -77,4 +78,5 @@ export {
   EMAIL_REGEX,
   FORM_ERR_MSG,
   REVIEW_REGEX,
+  PAGE_LIMIT,
 }

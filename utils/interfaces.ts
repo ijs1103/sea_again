@@ -77,3 +77,8 @@ export interface createReviewType {
   payload: string
   beachName: string
 }
+export interface getReviewsType {
+  limit: number
+  offset: number
+  beachName: string
+}

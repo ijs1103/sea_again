@@ -16,18 +16,10 @@ export default async function handler(
   const token = parseCookies(req.headers.cookie)['token']
   if (!token) return res.json({ ok: false })
   const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
-  const beach = await client.beach.findUnique({
-    where: {
-      name: name?.toString(),
-    },
-    select: {
-      id: true,
-    },
-  })
   const existingLike = await client.like.findFirst({
     where: {
       userId: id,
-      beachId: beach?.id,
+      beachName: String(name),
     },
   })
   if (existingLike) {
@@ -46,7 +38,7 @@ export default async function handler(
         },
         beach: {
           connect: {
-            id: beach?.id,
+            name: String(name),
           },
         },
       },

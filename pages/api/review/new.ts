@@ -15,14 +15,9 @@ async function handler(
   // 쿠키가 없을때 처리
   if (!token) return res.json({ ok: false })
   const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
-  const beach = await client.beach.findUnique({
-    where: {
-      name: beachName,
-    },
-  })
   const review = await client.review.create({
     data: {
-      payload,
+      payload: String(payload),
       user: {
         connect: {
           id,
@@ -30,7 +25,7 @@ async function handler(
       },
       beach: {
         connect: {
-          id: beach?.id,
+          name: beachName,
         },
       },
     },

@@ -40,7 +40,7 @@ export default async function handler(
     await client.like.findFirst({
       where: {
         userId: id,
-        beachId: beach?.id,
+        beachName: String(name),
       },
     })
   )

@@ -1,27 +1,36 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ResponseType } from '@utils/interfaces'
 import client from '@libs/client'
-import { parseCookies } from '@utils/index'
-import jwt from 'jsonwebtoken'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse
 ) {
   const {
     query: { beachName, limit, offset },
   } = req
-
+  const total_cnt = await client.review.count({
+    where: {
+      beachName: String(beachName),
+    },
+  })
+  const isEnd = total_cnt <= Number(offset) + Number(limit)
   const reviews = await client.review.findMany({
     where: {
-      beachName,
+      beachName: String(beachName),
     },
     orderBy: {
       createdAt: 'desc',
     },
-    take: +limit,
-    skip: +offset,
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    take: Number(limit),
+    skip: Number(offset),
   })
 
-  return res.json({ ok: true, reviews })
+  return res.json({ reviews, isEnd, total_cnt })
 }
