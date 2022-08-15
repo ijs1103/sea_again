@@ -45,6 +45,12 @@ const getReviews = async (getReviews: getReviewsType) => {
   })
   return data
 }
+const deleteReview = async ({ reviewId }: { reviewId: number }) => {
+  const { data } = await axios.post('/api/review/delete', {
+    reviewId,
+  })
+  return data
+}
 export {
   authFetcher,
   createAccount,
@@ -55,4 +61,5 @@ export {
   getBeachByName,
   createReview,
   getReviews,
+  deleteReview,
 }

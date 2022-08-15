@@ -32,17 +32,17 @@ interface ReviewForm {
 	payload: string
 }
 function Review({ beachName }: Props) {
-	const queryClient = useQueryClient()
-	const { isLogin } = useAuth('getProfile')
+	const { isLogin, profile } = useAuth('getProfile')
 	const { register, handleSubmit, formState, reset } =
 		useForm<ReviewForm>({ mode: 'onChange' })
 	const [page, setPage] = useState(1)
-	const { data: reviewData, isLoading } = useQuery<any>(['review', beachName, page], () => getReviews({ beachName, limit: 5, offset: page > 0 ? (page - 1) * 5 : 0 }), { keepPreviousData: true })
+	const { data: reviewData, isLoading, refetch } = useQuery<any>(['review', beachName, page], () => getReviews({ beachName, limit: 5, offset: page > 0 ? (page - 1) * 5 : 0 }), { keepPreviousData: true })
 	console.log(reviewData)
 	const { mutate: newReviewMutate } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {
 		onSuccess: (data) => {
 			if (!data.ok) alert('로그인 후 후기를 작성해주세요.')
-			queryClient.setQueryData(['review', beachName, page], data?.review)
+			// 후기 작성이 완료되면 후기 데이터 refetch
+			refetch()
 		},
 		onError: (error) => console.log('axios 에러 : ', error)
 	})
@@ -55,6 +55,7 @@ function Review({ beachName }: Props) {
 		return `${parsed?.slice(0, 4)} ${parsed?.slice(5, 10)} ${parsed?.slice(11, 16)}`
 	}, [])
 	const pageLength = Math.ceil(reviewData?.total_cnt / PAGE_LIMIT)
+	console.log(reviewData?.reviews)
 	return (
 		<div className='p-2'>
 			<form onSubmit={handleSubmit(onValid)}>
@@ -71,7 +72,8 @@ function Review({ beachName }: Props) {
 			</form>
 			<div className='mt-4 space-y-1 relative'>
 				{isLoading ? <Loader /> :
-					reviewData?.reviews?.map((review: any) => <Message key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} />)
+					// isMyReview: 내가 작성한 후기만 삭제를 허용 하기 위해, 내 후기 여부를 나타내는 boolean 값 
+					reviewData?.reviews?.map((review: any) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={refetch} />)
 				}
 				<Pagination limit={pageLength} page={page} setPage={setPage} />
 			</div>

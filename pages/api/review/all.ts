@@ -31,6 +31,5 @@ export default async function handler(
     take: Number(limit),
     skip: Number(offset),
   })
-
   return res.json({ reviews, isEnd, total_cnt })
 }
