@@ -4,7 +4,6 @@ declare global {
 		kakao: any;
 	}
 }
-type Positions = { lat: number; lng: number }[]
 
 function App() {
 	const mapRef = useRef<HTMLDivElement>(null);

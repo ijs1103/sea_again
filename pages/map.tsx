@@ -21,8 +21,10 @@ interface Pos {
 
 function Map() {
 	const router = useRouter()
-	const mapRef = useRef<HTMLDivElement>(null);
-	const map = useRef<any>(null);
+	const mapRef = useRef<HTMLDivElement | null>(null)
+	const map = useRef<any>(null)
+	const beachMapRef = useRef<HTMLDivElement | null>(null)
+	const beachMap = useRef<any>(null)
 	const [beach, setBeach] = useState<BeachResponse | null>(null)
 	const [markers, setMarkers] = useState<any[]>([]);
 	const [isModalOn, setIsModalOn] = useState(false)
@@ -34,18 +36,16 @@ function Map() {
 	// 하나의 마커를 생성하고 지도위에 표시하는 함수입니다
 	const addMarker = useCallback((pos: Pos, map: any) => {
 		const position = new window.kakao.maps.LatLng(pos.lat, pos.lng)
-		const imageSrc = './custom_marker.png', // 마커이미지의 주소입니다    
-			imageSize = new window.kakao.maps.Size(30, 40), // 마커이미지의 크기입니다
-			imageOption = { offset: new window.kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+		const imageSrc = './custom_marker.png',
+			imageSize = new window.kakao.maps.Size(30, 40),
+			imageOption = { offset: new window.kakao.maps.Point(27, 69) };
 
-		// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
 		const image = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
 		const marker = new window.kakao.maps.Marker({
 			position,
 			map,
 			image
 		})
-		// 커스텀 오버레이를 생성하고 지도에 표시한다
 		const overlay = new window.kakao.maps.CustomOverlay({
 			map,
 			clickable: true,
@@ -54,8 +54,7 @@ function Map() {
 			xAnchor: -0.1,
 			yAnchor: 2.5
 		});
-		// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
-		router.query.data && window.kakao.maps.event.addListener(marker, 'click', function () {
+		beach && window.kakao.maps.event.addListener(marker, 'click', function () {
 			setIsModalOn(true)
 		});
 		window.kakao.maps.event.addListener(marker, 'mouseover', function () {
@@ -80,7 +79,41 @@ function Map() {
 		router.isReady && router.query.data && setBeach(JSON.parse(router.query.data))
 	}, [router.isReady, router.query.data])
 
+	// 검색결과만 뿌려주는 지도 
 	useEffect(() => {
+		if (!beach) return
+		const script = document.createElement('script')
+		script.src = KAKAO_MAP_URL
+		document.head.appendChild(script)
+		script.onload = () => {
+			window.kakao.maps.load(() => {
+				if (!beachMapRef.current) return
+				const options = {
+					center: new window.kakao.maps.LatLng(coordinates?.lat, coordinates?.lng),
+					level: 6,
+					mapTypeId: window.kakao.maps.MapTypeId.ROADMAP
+				};
+
+				beachMap.current = new window.kakao.maps.Map(beachMapRef.current, options)
+
+				const mapTypeControl = new window.kakao.maps.MapTypeControl();
+
+				beachMap.current.addControl(mapTypeControl, window.kakao.maps.ControlPosition.BOTTOMLEFT);
+
+				const zoomControl = new window.kakao.maps.ZoomControl();
+
+				beachMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
+
+				const latLng = { lat: +beach?.lat, lng: +beach?.lon }
+				addMarker(latLng, beachMap.current)
+			})
+		}
+		return () => script.remove()
+	}, [beach])
+
+	// 현재 유저의 위치만 뿌려주는 지도 
+	useEffect(() => {
+		if (!coordinates) return
 		const script = document.createElement('script')
 		script.src = KAKAO_MAP_URL
 		document.head.appendChild(script)
@@ -103,20 +136,26 @@ function Map() {
 
 				map.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 
-				// 해수욕장을 검색한것이 아니라면 내 현재 위치를 지도에 표시한다
-				const latLng = router.query.data ? { lat: +beach?.lat, lng: +beach?.lon } : { lat: coordinates?.lat, lng: coordinates?.lng }
+				const latLng = { lat: coordinates?.lat, lng: coordinates?.lng }
 				addMarker(latLng, map.current)
 			})
 		}
 		return () => script.remove()
-	}, [beach, coordinates])
+	}, [coordinates])
 
 	return (
 		<div className='relative'>
-			<div
-				ref={mapRef}
-				className='shadow-2xl fixed top-0 left-0 w-full h-screen'
-			></div>
+			{beach ?
+				<div
+					ref={beachMapRef}
+					className='shadow-2xl fixed top-0 left-0 w-full h-screen'
+				></div>
+				:
+				<div
+					ref={mapRef}
+					className='shadow-2xl fixed top-0 left-0 w-full h-screen'
+				></div>
+			}
 			<MyMenu />
 			<SearchBar />
 			{beach && <SearchResult keyword={beach.sta_nm} />}

@@ -52,8 +52,12 @@ const deleteReview = async ({ reviewId }: { reviewId: number }) => {
   return data
 }
 const getLikedBeach = async (userId: string) => {
-  const { data } = await axios.get(`/api/user/getLikedBeach/${userId}`)
-  return data
+  const {
+    data: {
+      user: { likes },
+    },
+  } = await axios.get(`/api/user/getLikedBeach/${userId}`)
+  return likes
 }
 export {
   authFetcher,

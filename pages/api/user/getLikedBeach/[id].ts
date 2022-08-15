@@ -9,7 +9,6 @@ export default async function handler(
   const {
     query: { id },
   } = req
-  console.log(id)
   const user = await client.user.findUnique({
     where: {
       id: Number(id),
