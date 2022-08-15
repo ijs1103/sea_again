@@ -83,7 +83,7 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 								</li>)}
 							</ul>
 						</div>
-						<div className='h-[200px] w-full overflow-y-auto'>
+						<div className='h-[200px] w-full'>
 							{currentTab === '날씨' && <Weather {...{ lat, lon }} />}
 							{currentTab === '수질' && <WaterQuality {...{ sido_nm, sta_nm }} />}
 							{currentTab === '모래' && <Sand {...{ sido_nm, sta_nm }} />}

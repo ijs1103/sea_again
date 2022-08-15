@@ -64,7 +64,7 @@ function MyMenu() {
 					<span className="block py-2 px-4 text-sm text-gray-700 ">{isLogin ? '로그아웃' : '로그인'}</span>
 				</div>
 			</div>
-			{/* 오버레이 */}
+			{/* 투명 오버레이 => dropDown 메뉴를 토글하기 위함 */}
 			<div onClick={toggleDropDown} className={cls('z-0 fixed top-0 left-0 w-full h-full ', isActive ? 'block' : 'hidden')}></div>
 		</div>
 	)

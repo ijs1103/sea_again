@@ -2,7 +2,7 @@ import Message from '@components/layout/Message'
 import { Review } from '@prisma/client'
 import { cls } from '@utils/index'
 import { ResponseType, createReviewType } from '@utils/interfaces'
-import axios, { Axios, AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { createReview, getReviews } from '@utils/axiosFunctions/ownApi'
 import { useForm } from 'react-hook-form'
 import {
@@ -11,11 +11,9 @@ import {
 	PAGE_LIMIT
 } from '@utils/constants'
 import useAuth from '@hooks/useAuth'
-import { useCallback, useEffect, useState } from 'react'
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
+import { useCallback, useState, useEffect, useRef } from 'react'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import Loader from '@components/Loader'
-import { useRef } from "react"
-import useIntersectionObserver from "@hooks/useIO";
 import Pagination from '@components/layout/Pagination'
 
 
@@ -37,7 +35,6 @@ function Review({ beachName }: Props) {
 		useForm<ReviewForm>({ mode: 'onChange' })
 	const [page, setPage] = useState(1)
 	const { data: reviewData, isLoading, refetch } = useQuery<any>(['review', beachName, page], () => getReviews({ beachName, limit: 5, offset: page > 0 ? (page - 1) * 5 : 0 }), { keepPreviousData: true })
-	console.log(reviewData)
 	const { mutate: newReviewMutate } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {
 		onSuccess: (data) => {
 			if (!data.ok) alert('로그인 후 후기를 작성해주세요.')
@@ -55,9 +52,16 @@ function Review({ beachName }: Props) {
 		return `${parsed?.slice(0, 4)} ${parsed?.slice(5, 10)} ${parsed?.slice(11, 16)}`
 	}, [])
 	const pageLength = Math.ceil(reviewData?.total_cnt / PAGE_LIMIT)
-	console.log(reviewData?.reviews)
+	const reviewRef = useRef<HTMLDivElement | null>(null)
+	const scollToTop = useCallback(() => {
+		if (!reviewRef.current) return
+		reviewRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+	}, [])
+	useEffect(() => {
+		scollToTop()
+	}, [page])
 	return (
-		<div className='p-2'>
+		<div className='h-full p-2 overflow-y-auto' ref={reviewRef}>
 			<form onSubmit={handleSubmit(onValid)}>
 				<label htmlFor="review" className="sr-only">해수욕장 후기</label>
 				<div className="flex items-center py-1 px-3 bg-lightGray rounded-lg ">

@@ -1,5 +1,4 @@
 import { cls } from '@utils/index'
-import React from 'react'
 
 interface Props {
 	limit: number
