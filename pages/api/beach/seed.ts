@@ -18,6 +18,8 @@ async function handler(
         await client.beach.create({
           data: {
             name: String(`${beach.gugun_nm} ${beach.sta_nm}`),
+            lat: beach.lat,
+            lng: beach.lon,
           },
         }),
       1000

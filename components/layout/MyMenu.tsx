@@ -55,7 +55,7 @@ function MyMenu() {
 						</Link>
 					</li>
 					<li className='transition hover:bg-gray-100'>
-						<Link href={'/user/likedBeach'}>
+						<Link href={`/user/likedBeach/${profile?.id}`}>
 							<a className="block py-2 px-4">찜 해수욕장 보기</a>
 						</Link>
 					</li>

@@ -51,6 +51,10 @@ const deleteReview = async ({ reviewId }: { reviewId: number }) => {
   })
   return data
 }
+const getLikedBeach = async (userId: string) => {
+  const { data } = await axios.get(`/api/user/getLikedBeach/${userId}`)
+  return data
+}
 export {
   authFetcher,
   createAccount,
@@ -62,4 +66,5 @@ export {
   createReview,
   getReviews,
   deleteReview,
+  getLikedBeach,
 }
