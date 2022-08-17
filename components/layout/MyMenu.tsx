@@ -33,6 +33,7 @@ function MyMenu() {
 			router.push('/user/logIn')
 		}
 	}
+	const handleLikedBeachClick = () => { window.location.href = `/map/?userId=${profile?.id}` }
 	return (
 		<div className='cursor-pointer absolute left-0 mt-4 ml-4'>
 			<button type='button' onClick={toggleDropDown} className='rounded-full bg-primary hover:brightness-75 transition-all p-2'>
@@ -55,9 +56,7 @@ function MyMenu() {
 						</Link>
 					</li>
 					<li className='transition hover:bg-gray-100'>
-						<Link href={`/user/likedBeach/${profile?.id}`}>
-							<a className="block py-2 px-4">찜 해수욕장 보기</a>
-						</Link>
+						<a onClick={handleLikedBeachClick} className="block py-2 px-4">찜 해수욕장 보기</a>
 					</li>
 				</ul>
 				<div onClick={handleLogInOutClick} className="transition py-1 hover:bg-gray-100">
