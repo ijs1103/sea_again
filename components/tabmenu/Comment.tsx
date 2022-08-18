@@ -15,6 +15,7 @@ import { useCallback, useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import Loader from '@components/Loader'
 import Pagination from '@components/layout/Pagination'
+import CommentNF from '@components/tabmenu/CommentNF'
 
 
 interface ReviewWith extends Review {
@@ -77,7 +78,7 @@ function Review({ beachName }: Props) {
 			<div className='mt-4 space-y-1 relative'>
 				{isLoading ? <Loader /> :
 					// isMyReview: 내가 작성한 후기만 삭제를 허용 하기 위해, 내 후기 여부를 나타내는 boolean 값 
-					reviewData?.reviews?.map((review: any) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={refetch} />)
+					(reviewData.totalCnt > 0) ? reviewData?.reviews?.map((review: any) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={refetch} />) : <CommentNF />
 				}
 				<Pagination limit={pageLength} page={page} setPage={setPage} />
 			</div>

@@ -200,7 +200,7 @@ function Map() {
 	}, [coordinates])
 
 	return (
-		<div className='relative'>
+		<div>
 			{mode === 'search' &&
 				<div
 					ref={beachMapRef}
