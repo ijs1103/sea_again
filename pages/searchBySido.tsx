@@ -1,25 +1,26 @@
 import MobileLayout from '@components/layout/MobileLayout'
 import { useQuery } from '@tanstack/react-query'
 import { SIDO_ARR } from '@utils/constants'
-import { useMemo, useState, useEffect } from 'react'
+import { useState } from 'react'
 import { getBeach } from '@utils/axiosFunctions/publicApi'
 import { cls } from '@utils/index'
 import { useRouter } from 'next/router'
 import Button from '@components/layout/Button'
 import Loader from '@components/Loader'
+import { useAppDispatch } from "@store/index"
+import { setSearched } from '@store/slice/beachSlice'
 
-
-function searchBySido() {
+function SearchBySido() {
+	const dispatch = useAppDispatch()
 	const router = useRouter()
 	const [curSido, setCurSido] = useState('인천')
 	const [beach, setBeach] = useState('')
 	const { data, isLoading, error } = useQuery<any>(['beach', curSido], () => getBeach(curSido))
-	const hanldeClick = () => {
-		// 라디오 버튼 체크된 값에 해당되는 해수욕장 객체 데이터를 next/router의 query 속성에 저장하여 넘긴다 
-		router.push({ pathname: '/map', query: { data: beach } })
-	}
+	const hanldeClick = () => router.push('/map')
+
 	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.target.dataset.beach && setBeach(e.target.dataset.beach)
+		if (!e.target.dataset.beach) return
+		dispatch(setSearched(JSON.parse(e.target.dataset.beach)))
 	}
 	return (
 		<MobileLayout isGoBack={true}>
@@ -61,4 +62,4 @@ function searchBySido() {
 	)
 }
 
-export default searchBySido
+export default SearchBySido

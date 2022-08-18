@@ -17,7 +17,7 @@ import useAuth from '@hooks/useAuth'
 
 interface Props {
 	onModalClose: () => void
-	beachData: BeachResponse
+	beachData: BeachResponse | undefined
 }
 
 interface BeachByNameRes {
@@ -32,7 +32,6 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const { data } = useQuery<any>(['beachByName', `${gugun_nm} ${sta_nm}`], () => getBeachByName(`${gugun_nm} ${sta_nm}`))
-	console.log(data)
 	const { mutate: toggleLike } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
 	const handleLikeclick = useCallback(() => {
 		// 로그인을 한 상태가 아니라면 좋아요 로직이 실행되지 않도록 

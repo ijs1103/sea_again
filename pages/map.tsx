@@ -4,12 +4,13 @@ import Modal from '@components/Modal';
 import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { BeachResponse } from '@utils/interfaces'
+import { IAddMarker } from '@utils/interfaces'
 import MyMenu from '@components/layout/MyMenu';
 import useGeolocation from '@hooks/useGeolocation';
 import { useQuery } from '@tanstack/react-query';
 import { getLikedBeach } from '@utils/axiosFunctions/ownApi'
-import { redirect } from 'next/dist/server/api-utils';
+import { useAppSelector, useAppDispatch } from "@store/index"
+import { setLikedBeachs, setLikedBeach } from '@store/slice/beachSlice';
 
 declare global {
 	interface Window {
@@ -17,12 +18,9 @@ declare global {
 	}
 }
 
-interface Position {
-	lat: number
-	lng: number
-}
-
 function Map() {
+	const dispatch = useAppDispatch()
+	const beachState = useAppSelector(state => state.beach)
 	const router = useRouter()
 	const mapRef = useRef<HTMLDivElement | null>(null)
 	const map = useRef<any>(null)
@@ -31,20 +29,21 @@ function Map() {
 	const likedMapRef = useRef<HTMLDivElement | null>(null)
 	const likedMap = useRef<any>(null)
 	const [mode, setMode] = useState<'search' | 'liked' | 'myArea'>()
-	const [beach, setBeach] = useState<BeachResponse | null>(null)
 	const [markers, setMarkers] = useState<any[]>([]);
 	const [isModalOn, setIsModalOn] = useState(false)
-	const handleModalClose = () => setIsModalOn(false)
 	const { coordinates } = useGeolocation()
-	const beachOverlay = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:10px; width:100px; height:100px; background-color: #fff'>← 클릭하여 <strong style='color: #5E17EB'>${beach?.sta_nm}</strong> 상세정보</span>`
+	const { data, isSuccess, error } = useQuery<any>(['likedBeachs', router.query.userId], () => getLikedBeach(router.query.userId), { enabled: !!router.query.userId })
+	const beachOverlay = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:10px; width:100px; height:100px; background-color: #fff'>← 클릭하여 <strong style='color: #5E17EB'>${beachState?.searchedBeach?.sta_nm}</strong> 상세정보</span>`
 	const myPosOverlay = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:10px; width:100px; height:100px; background-color: #fff'>← 여기가 <strong style='color: #5E17EB'>내 위치</strong></span>`
-	const { data: likedBeach, isLoading, error } = useQuery<any>(['likedBeach', router.query.userId], () => getLikedBeach(router.query.userId), { enabled: !!router.query.userId })
-	const lagLngArr: Position[] = useMemo(() => likedBeach?.map((cur: any) => { return { lat: +cur.beach.lat, lng: +cur.beach.lng } }), [likedBeach])
+	const handleModalClose = () => setIsModalOn(false)
 
-	// 하나의 마커를 생성하고 지도위에 표시하는 함수입니다
-	const addMarker = (position: Position, map: any) => {
+	useEffect(() => {
+		if (!data) return
+		data.ok ? dispatch(setLikedBeachs(data.likedBeachs)) : alert(data.error)
+	}, [data])
+	const addMarker = ({ position, map, beachName }: IAddMarker) => {
 		const imageSrc = (mode === 'liked') ? './like_marker.png' : './custom_marker.png',
-			imageSize = new window.kakao.maps.Size(40, 40),
+			imageSize = new window.kakao.maps.Size((mode === 'liked') ? 40 : 30, 40),
 			imageOption = { offset: new window.kakao.maps.Point(27, 69) };
 
 		const image = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
@@ -53,44 +52,45 @@ function Map() {
 			map,
 			image
 		})
+		const likedOverlay = `<span style='font-size:14px; color: #353B48; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);  border-radius:10px; padding:8px; width:50px; height:50px; background-color: #fff'>❤️<strong style={ color: gray }> ${beachName}</strong></span>`
 		const overlay = new window.kakao.maps.CustomOverlay({
 			map,
 			clickable: true,
-			content: (mode === 'search') ? beachOverlay : (mode === 'myArea') ? myPosOverlay : null,
+			content: (mode === 'search') ? beachOverlay : (mode === 'myArea') ? myPosOverlay : likedOverlay,
 			position,
-			xAnchor: -0.1,
-			yAnchor: 2.5
+			xAnchor: (mode === 'liked') ? 0.5 : -0.1,
+			yAnchor: (mode === 'liked') ? 3.5 : 2.5
 		});
-		(mode !== 'myArea') && window.kakao.maps.event.addListener(marker, 'click', function () {
+		// 검색한 해수욕장 데이터를 조회 할때에만 모달창을 On
+		(mode === 'search') && window.kakao.maps.event.addListener(marker, 'click', function () {
 			setIsModalOn(true)
 		});
+		if (mode === 'liked') overlay.setMap(null)
 		window.kakao.maps.event.addListener(marker, 'mouseover', function () {
-			overlay.setMap(null);
+			(mode === 'liked') ? overlay.setMap(map) : overlay.setMap(null);
 		});
 		window.kakao.maps.event.addListener(marker, 'mouseout', function () {
-			overlay.setMap(map);
+			(mode === 'liked') ? overlay.setMap(null) : overlay.setMap(map);
 		});
-		// 마커가 지도 위에 표시되도록 설정합니다
 		marker.setMap(map);
 		setMarkers(prev => [...prev, marker]);
+
 	}
 
 	useEffect(() => {
 		if (!router.isReady) return
-		if (router.query.data) {
+		if (beachState.searchedBeach) {
 			setMode('search')
-			setBeach(JSON.parse(router.query.data as string))
+		} else {
+			router.query.userId ? setMode('liked') : setMode('myArea')
 		}
-		if (router.query.userId) {
-			setMode('liked')
-		}
-		if (router.asPath === '/map') setMode('myArea')
+
 	}, [router.isReady])
 
-	function drawMarkers(positions: Position[], bounds: any) {
-		positions.forEach(cur => {
+	function drawMarkers(positions: any, bounds: any) {
+		positions.forEach((cur: any) => {
 			const position = new window.kakao.maps.LatLng(cur.lat, cur.lng)
-			addMarker(position, likedMap.current)
+			addMarker({ position, map: likedMap.current, beachName: cur.name })
 			bounds.extend(position)
 		})
 	}
@@ -120,12 +120,12 @@ function Map() {
 				likedMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const bounds = new window.kakao.maps.LatLngBounds()
-				drawMarkers(lagLngArr, bounds)
+				drawMarkers(data?.likedBeachs, bounds)
 				likedMap.current.setBounds(bounds)
 			})
 		}
 		return () => script.remove()
-	}, [likedBeach])
+	}, [data])
 
 	// 검색결과만 뿌려주는 지도 
 	useEffect(() => {
@@ -135,6 +135,7 @@ function Map() {
 		document.head.appendChild(script)
 		script.onload = () => {
 			window.kakao.maps.load(() => {
+
 				if (!beachMapRef.current) return
 				const options = {
 					center: new window.kakao.maps.LatLng(coordinates?.lat, coordinates?.lng),
@@ -152,15 +153,17 @@ function Map() {
 
 				beachMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
-				const position = new window.kakao.maps.LatLng(+beach?.lat, +beach?.lon)
-				addMarker(position, beachMap.current)
+				const lat = Number(beachState?.searchedBeach?.lat)
+				const lng = Number(beachState?.searchedBeach?.lon)
+				const position = new window.kakao.maps.LatLng(lat, lng)
+				addMarker({ position, map: beachMap.current })
 				const bounds = new window.kakao.maps.LatLngBounds();
 				bounds.extend(position)
 				beachMap.current.setBounds(bounds);
 			})
 		}
 		return () => script.remove()
-	}, [beach])
+	}, [mode])
 
 	// 현재 유저의 위치만 뿌려주는 지도 
 	useEffect(() => {
@@ -184,11 +187,10 @@ function Map() {
 				map.current.addControl(mapTypeControl, window.kakao.maps.ControlPosition.BOTTOMLEFT);
 
 				const zoomControl = new window.kakao.maps.ZoomControl();
-
 				map.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const position = new window.kakao.maps.LatLng(+coordinates?.lat, +coordinates?.lng)
-				addMarker(position, map.current)
+				addMarker({ position, map: map.current })
 				const bounds = new window.kakao.maps.LatLngBounds();
 				bounds.extend(position)
 				map.current.setBounds(bounds);
@@ -217,8 +219,9 @@ function Map() {
 			}
 			<MyMenu />
 			<SearchBar />
-			{beach && <SearchResult keyword={beach.sta_nm} />}
-			{beach && isModalOn && <Modal onModalClose={handleModalClose} beachData={beach} />}
+			{mode === 'liked' && beachState.likedBeachs && beachState.likedBeachs.length > 0 && <SearchResult type="liked" keyword={beachState?.likedBeachs?.length + ""} />}
+			{mode === 'search' && beachState.searchedBeach && <SearchResult type="search" keyword={beachState.searchedBeach.sta_nm} />}
+			{mode === 'search' && isModalOn && <Modal key='searchedModal' onModalClose={handleModalClose} beachData={beachState.searchedBeach} />}
 		</div>
 
 	);

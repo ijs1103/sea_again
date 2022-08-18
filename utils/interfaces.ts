@@ -82,3 +82,12 @@ export interface getReviewsType {
   offset: number
   beachName: string
 }
+export interface Position {
+  lat: number
+  lng: number
+}
+export interface IAddMarker {
+  position: Position
+  map: any
+  beachName?: string
+}

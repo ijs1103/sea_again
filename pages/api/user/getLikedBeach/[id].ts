@@ -27,6 +27,10 @@ export default async function handler(
       },
     },
   })
-
-  return res.json({ ok: true, user })
+  if (!user?.likes.length)
+    return res.json({ ok: false, error: '찜한 해수욕장이 없습니다' })
+  const likedBeachs = user?.likes.map((cur) => {
+    return { name: cur.beach.name, lat: cur.beach.lat, lng: cur.beach.lng }
+  })
+  return res.json({ ok: true, likedBeachs })
 }

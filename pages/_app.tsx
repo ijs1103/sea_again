@@ -1,21 +1,23 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
+import { Provider } from 'react-redux'
 import {
   QueryClient,
   QueryClientProvider,
   Hydrate
 } from '@tanstack/react-query'
+import { store } from '@store/index'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient({});
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Component {...pageProps} />
-        {/* <div className='h-screen'>
-        </div> */}
-      </Hydrate>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
+      </QueryClientProvider>
+    </Provider>
   )
 }
 
