@@ -61,7 +61,7 @@ function Map() {
 			xAnchor: (mode === 'liked') ? 0.5 : -0.1,
 			yAnchor: (mode === 'liked') ? 3.5 : 2.5
 		});
-		// 검색한 해수욕장 데이터를 조회 할때에만 모달창을 On
+		// 검색한 해수욕장 데이터를 조회 할때에만 모달창에 클릭 이벤트를 할당합니다
 		(mode === 'search') && window.kakao.maps.event.addListener(marker, 'click', function () {
 			setIsModalOn(true)
 		});
@@ -189,7 +189,7 @@ function Map() {
 				const zoomControl = new window.kakao.maps.ZoomControl();
 				map.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
-				const position = new window.kakao.maps.LatLng(+coordinates?.lat, +coordinates?.lng)
+				const position = new window.kakao.maps.LatLng(coordinates?.lat, coordinates?.lng)
 				addMarker({ position, map: map.current })
 				const bounds = new window.kakao.maps.LatLngBounds();
 				bounds.extend(position)
@@ -204,17 +204,17 @@ function Map() {
 			{mode === 'search' &&
 				<div
 					ref={beachMapRef}
-					className='shadow-2xl fixed top-0 left-0 w-full h-screen'
+					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
 				></div>}
 			{mode === 'liked' &&
 				<div
 					ref={likedMapRef}
-					className='shadow-2xl fixed top-0 left-0 w-full h-screen'
+					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
 				></div>}
 			{mode === 'myArea' &&
 				<div
 					ref={mapRef}
-					className='shadow-2xl fixed top-0 left-0 w-full h-screen'
+					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
 				></div>
 			}
 			<MyMenu />

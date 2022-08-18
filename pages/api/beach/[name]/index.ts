@@ -16,6 +16,11 @@ export default async function handler(
       name: name?.toString(),
     },
     include: {
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
       reviews: {
         orderBy: {
           createdAt: 'desc',
