@@ -90,4 +90,5 @@ export interface IAddMarker {
   position: Position
   map: any
   beachName?: string
+  rank?: number
 }
