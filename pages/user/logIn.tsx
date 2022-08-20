@@ -14,7 +14,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
-import { userLogIn } from '@utils/axiosFunctions/ownApi'
+import { userLogIn } from '@utils/fetchers/ownApi'
 import { useRouter } from 'next/router'
 
 function LogIn() {
@@ -25,7 +25,7 @@ function LogIn() {
 		onSuccess: ({ data }) => {
 			if (data.ok) {
 				alert('로그인 성공!!')
-				router.push('/')
+				router.push('/map')
 			} else {
 				alert(data.error)
 			}
@@ -39,12 +39,12 @@ function LogIn() {
 	return (
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='로그인'>
-				<form onSubmit={handleSubmit(onValid)} className='min-w-[500px] flex flex-col gap-3'>
+				<form onSubmit={handleSubmit(onValid)} className='form-layout'>
 					<FormInput id={'email'} register={register("email", { required: true, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
 					<FormInput id={'password'} register={register("password", { required: true, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
-					<div className="my-4 flex justify-between items-center text-sm">
+					<div className="flex items-center justify-between my-4 text-sm">
 						<div className='flex items-center'>
-							<input id="remember" type="checkbox" value="" className="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300" />
+							<input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300" />
 							<label htmlFor="remember" className="ml-2 font-medium text-gray-400">로그인 유지</label>
 						</div>
 						<Link href='/user/signUp'>

@@ -73,18 +73,14 @@ const parseCookies = (cookie = '') => {
     }, {})
 }
 
-// const apiDataToDb = async () => {
-//   const allBeach = []
-//   for (const sido of SIDO_ARR) {
-//     const beachArr = await getBeach(sido)
-//     allBeach.push(...beachArr)
-//   }
-//   // get 메소드로 불러와서 배열을 서버에 넘기고 이를 db에 저장
-//   const len = allBeach.length
-//   allBeach.forEach(async (beach, idx) => {
-//     // planet scale 무료계정을 사용하고 있어서, 다수의 db 데이터를 create 할때 제약이 있으므로 1초간의 텀을 두었습니다
-//     setTimeout(() => createBeach(beach), 1000)
-//     console.log(idx / len)
-//   })
-// }
-export { cls, weatherToIcon, latLngToXy, extractOnlyPhoneNum, parseCookies }
+const getRandomSrc = () =>
+  `/beaches/beach${Math.ceil(Math.random() * 20) + 1}.jpeg`
+
+export {
+  cls,
+  weatherToIcon,
+  latLngToXy,
+  extractOnlyPhoneNum,
+  parseCookies,
+  getRandomSrc,
+}

@@ -37,12 +37,7 @@ export interface BeachResponse {
   sta_nm: string
 }
 export type TabType = '날씨' | '수질' | '모래' | '후기'
-export interface WaterResponse {
-  ok?: boolean
-  testDate?: string
-  message?: string
-}
-export interface SandResponse {
+export interface CheckResponse {
   ok?: boolean
   testDate?: string
   message?: string

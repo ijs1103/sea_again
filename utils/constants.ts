@@ -62,6 +62,9 @@ const FORM_ERR_MSG = {
   samePrevPw: '이전과 다른 비밀번호를 입력해주세요.',
 } as const
 const PAGE_LIMIT = 5
+
+const BLUR_DATA_URL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOME39dDwAEHAHhJqXM7gAAAABJRU5ErkJggg=='
 export {
   KAKAO_MAP_URL,
   WEATHER_BASE_URL,
@@ -79,4 +82,5 @@ export {
   FORM_ERR_MSG,
   REVIEW_REGEX,
   PAGE_LIMIT,
+  BLUR_DATA_URL,
 }

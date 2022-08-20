@@ -1,4 +1,4 @@
-import { getBeach } from '@utils/axiosFunctions/publicApi'
+import { getBeach } from '@utils/fetchers/publicApi'
 import { SIDO_ARR } from '@utils/constants'
 import React from 'react'
 

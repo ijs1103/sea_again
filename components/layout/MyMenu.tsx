@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
-import { userLogOut } from '@utils/axiosFunctions/ownApi'
+import { userLogOut } from '@utils/fetchers/ownApi'
 import Link from 'next/link'
 import useAuth from '@hooks/useAuth'
 
@@ -35,16 +35,16 @@ function MyMenu() {
 	}
 	const handleLikedBeachClick = () => { window.location.href = `/map/?userId=${profile?.id}` }
 	return (
-		<div className='cursor-pointer absolute left-0 mt-4 ml-4'>
-			<button type='button' onClick={toggleDropDown} className='rounded-full bg-primary hover:brightness-75 transition-all p-2'>
+		<div className='absolute left-0 mt-4 ml-4 cursor-pointer'>
+			<button type='button' onClick={toggleDropDown} className='p-2 transition-all rounded-full bg-primary hover:brightness-75'>
 				<span className="sr-only">Open my menu</span>
 				<svg className="w-6 h-6 text-white " stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
 			</button>
 			<div className={cls("absolute top-12 z-10 w-44 bg-white rounded-2xl divide-y divide-gray-200 shadow-2xl overflow-hidden ", isActive ? 'block' : 'hidden')}>
-				<div className="py-3 px-4 text-sm text-gray-900">
+				<div className="px-4 py-3 text-sm text-gray-900">
 					{isLogin ? <>
 						<span className='text-primary'>{profile?.name}</span>
-						<span className="text-fontPrimary block font-medium truncate">{profile?.email}</span>
+						<span className="block font-medium truncate text-fontPrimary">{profile?.email}</span>
 					</> : <span className='text-primary'>반갑습니다 익명님</span>
 					}
 
@@ -52,15 +52,15 @@ function MyMenu() {
 				<ul className={cls("bg-white py-1 text-sm text-gray-700 ", !isLogin ? "pointer-events-none opacity-30" : "")} aria-labelledby="dropdownUserAvatarButton">
 					<li className='transition hover:bg-gray-100'>
 						<Link href={'/user/profile'}>
-							<a className="block py-2 px-4">프로필 수정</a>
+							<a className="block px-4 py-2">프로필 수정</a>
 						</Link>
 					</li>
 					<li className='transition hover:bg-gray-100'>
-						<a onClick={handleLikedBeachClick} className="block py-2 px-4">찜 해수욕장 보기</a>
+						<a onClick={handleLikedBeachClick} className="block px-4 py-2">찜 해수욕장 보기</a>
 					</li>
 				</ul>
-				<div onClick={handleLogInOutClick} className="transition py-1 hover:bg-gray-100">
-					<span className="block py-2 px-4 text-sm text-gray-700 ">{isLogin ? '로그아웃' : '로그인'}</span>
+				<div onClick={handleLogInOutClick} className="py-1 transition hover:bg-gray-100">
+					<span className="block px-4 py-2 text-sm text-gray-700 ">{isLogin ? '로그아웃' : '로그인'}</span>
 				</div>
 			</div>
 			{/* 투명 오버레이 => dropDown 메뉴를 토글하기 위함 */}

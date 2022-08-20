@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { ResponseType } from '@utils/interfaces'
-import { authFetcher } from '@utils/axiosFunctions/ownApi'
+import { authFetcher } from '@utils/fetchers/ownApi'
 
 function useAuth(mode: 'getProfile' | 'auth') {
   const router = useRouter()

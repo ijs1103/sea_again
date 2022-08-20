@@ -10,7 +10,7 @@ import useGeolocation from '@hooks/useGeolocation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios'
 
-import { getLikedBeach, getToptenBeach, toggleLikeFetcher } from '@utils/axiosFunctions/ownApi'
+import { getLikedBeach, getToptenBeach, toggleLikeFetcher } from '@utils/fetchers/ownApi'
 import { useAppSelector, useAppDispatch } from "@store/index"
 import { setLikedBeachs, setLikedBeach } from '@store/slice/beachSlice';
 import ToggleButton from '@components/ToggleButton';
@@ -256,7 +256,7 @@ function Map() {
 	}, [coordinates])
 
 	return (
-		<div>
+		<div className='relative'>
 			{mode === 'search' &&
 				<div
 					ref={beachMapRef}

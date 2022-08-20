@@ -13,7 +13,7 @@ import {
 } from '@utils/constants'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { createAccount } from '@utils/axiosFunctions/ownApi'
+import { createAccount } from '@utils/fetchers/ownApi'
 import { useRouter } from 'next/router'
 
 function SignUp() {
@@ -38,13 +38,13 @@ function SignUp() {
 	return (
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='회원가입'>
-				<form onSubmit={handleSubmit(onValid)} className='min-w-[500px] flex flex-col gap-3'>
+				<form onSubmit={handleSubmit(onValid)} className='form-layout'>
 					<FormInput id={'email'} register={register("email", { required: FORM_ERR_MSG.required, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
 					<FormInput id={'name'} register={register("name", { required: FORM_ERR_MSG.required, pattern: { value: NAME_REGEX, message: FORM_ERR_MSG.invalidName } })} errorMsg={formState.errors['name']?.message} />
 					<FormInput id={'password'} register={register("password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
 					<FormInput id={'confirm_password'} register={register("confirm_password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw }, validate: { samePw: val => val === getValues('password') || FORM_ERR_MSG.invalidConfirmPw } })} errorMsg={formState.errors['confirm_password']?.message} />
 					<Link href='/user/logIn'>
-						<a className="my-4 text-sm text-primary hover:underline text-right">로그인 하기</a>
+						<a className="my-4 text-sm text-right text-primary hover:underline">로그인 하기</a>
 					</Link>
 					<Button onClick={() => alert()}>가입</Button>
 				</form>

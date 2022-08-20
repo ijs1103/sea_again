@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .back-btn {
+    @apply p-1 transition rounded-full h-7 w-7 hover:bg-lightGray;
+  }
+  .form-layout {
+    @apply flex w-full flex-col gap-3 pb-4 sm:max-w-[500px];
+  }
+  .modal-info {
+    @apply block text-xs font-bold text-fontPrimary sm:text-base;
+  }
+  .pagination-btn {
+    @apply ml-0 block border border-gray-300 bg-white py-[5px] px-1 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 sm:px-2 sm:py-1;
+  }
+}
