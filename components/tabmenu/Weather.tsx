@@ -14,12 +14,13 @@ interface Props {
 
 function Weather({ lat, lon }: Props) {
 	// enabled 옵션 :  lat(위도)과 lon(경도)값이 undefined가 아닐때에만 데이터 fetch가 실행된다 
-	const { data, isLoading, refetch } = useQuery<WeatherResponse[]>(['weather_forcast'], () => getWeather(lat, lon), { enabled: !!lat && !!lon })
+	const { data, isLoading, refetch } = useQuery<WeatherResponse[]>(['weather_forcast'], () => getWeather(lat, lon), { enabled: true })
+
 	return (
 		<div className='relative flex flex-col items-center h-full'>
 			{isLoading ? <Loader /> :
 				<>
-					<div onClick={() => refetch()} className='absolute right-0 flex flex-col items-center gap-1 cursor-pointer'>
+					<div onClick={() => refetch()} className='absolute right-0 flex flex-col items-center gap-1 p-1.5 rounded-full transition cursor-pointer hover:bg-lightGray'>
 						<svg className='w-3 h-3 sm:w-5 sm:h-5 fill-gray-500' viewBox="0 0 67 84" xmlns="http://www.w3.org/2000/svg">
 							<path d="M33.3333 16.6667V0L12.5 20.8333L33.3333 41.6667V25C47.125 25 58.3333 36.2083 58.3333 50C58.3333 63.7917 47.125 75 33.3333 75C19.5417 75 8.33333 63.7917 8.33333 50H0C0 68.4167 14.9167 83.3333 33.3333 83.3333C51.75 83.3333 66.6667 68.4167 66.6667 50C66.6667 31.5833 51.75 16.6667 33.3333 16.6667Z" fill="black" />
 						</svg>
