@@ -46,10 +46,15 @@ function Map() {
 		markers.forEach(cur => cur.setMap(null))
 		overlays.forEach(cur => cur.setMap(null))
 	}
-	// 좋아요 한 해수욕장이 있으면 전역상태로 저장 , 없으면 좋아요 한 해수욕장이 없다는 메시지 표시 
+	// 좋아요 한 해수욕장이 있으면 전역상태로 저장 , 좋아요 한 해수욕장이 없으면 alert 표시후 뒤로가기 
 	useEffect(() => {
 		if (!data) return
-		data.ok ? dispatch(setLikedBeachs(data.likedBeachs)) : alert(data.error)
+		if (data.ok) {
+			dispatch(setLikedBeachs(data.likedBeachs))
+		} else {
+			alert(data.error)
+			router.back()
+		}
 	}, [data])
 	useEffect(() => {
 		if (mode !== 'topTen') return
