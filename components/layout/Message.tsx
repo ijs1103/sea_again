@@ -1,10 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
-import { deleteReview } from '@utils/fetchers/ownApi'
-import useAuth from '@hooks/useAuth'
-import { ResponseType, createReviewType } from '@utils/interfaces'
-
-import { AxiosError } from 'axios'
-import React from 'react'
+import useDeleteMessage from "@hooks/useQueries/useDeleteMessage"
 
 interface Props {
 	isMyReview: boolean
@@ -12,21 +6,11 @@ interface Props {
 	userName: string
 	payload: string
 	reviewDate: string
-	onReFetch: () => void
 }
-function Message({ isMyReview, reviewId, userName, payload, reviewDate, onReFetch }: Props) {
-	const { mutate: deleteMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, { reviewId: number }>(deleteReview, {
-		onSuccess: (data) => {
-			if (data.ok) {
-				onReFetch()
-			} else {
-				alert(data.error)
-			}
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+function Message({ isMyReview, reviewId, userName, payload, reviewDate }: Props) {
+	const { deleteMessage } = useDeleteMessage()
 	const handleDelete = () => {
-		confirm('정말로 삭제 하시겠습니까?') && deleteMutate({ reviewId })
+		confirm('정말로 삭제 하시겠습니까?') && deleteMessage({ reviewId })
 	}
 	return (
 		<div className="flex items-start space-x-2 group even:flex-row-reverse even:space-x-reverse">

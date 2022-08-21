@@ -14,13 +14,6 @@ import CommentNotFound from '@components/tabmenu/CommentNotFound'
 import useReview from '@hooks/useQueries/useReview'
 import useCreateReview from '@hooks/useQueries/useCreateReview'
 
-
-interface ReviewWith extends Review {
-	review: Review
-	user: {
-		name: string
-	}
-}
 interface Props {
 	beachName: string
 }
@@ -32,8 +25,8 @@ function Review({ beachName }: Props) {
 	const { register, handleSubmit, formState, reset } =
 		useForm<ReviewForm>({ mode: 'onChange' })
 	const [page, setPage] = useState(1)
-	const { data, reviewsRefetch, isLoading } = useReview(beachName, page)
-	const { createReview } = useCreateReview(reviewsRefetch)
+	const { data, isLoading } = useReview(beachName, page)
+	const { createReview } = useCreateReview()
 
 	const onValid = (form: ReviewForm) => {
 		createReview({ ...form, beachName })
@@ -67,9 +60,9 @@ function Review({ beachName }: Props) {
 			</form>
 			<div className='relative mt-4 space-y-1'>
 				{isLoading ? <Loader /> :
-					// isMyReview: 내가 작성한 후기만 삭제를 허용 하기 위해, 내 후기 여부를 나타내는 boolean 값 
+					// isMyReview: 내가 작성한 후기만 삭제를 허용 하기 위해, 내 후기 여부를 나타내는 값 
 					(data?.total_cnt as number > 0) ?
-						data?.reviews?.map((review: Review) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={reviewsRefetch} />)
+						data?.reviews?.map((review: any) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} />)
 						: <CommentNotFound />
 				}
 				<Pagination isEmpty={data?.total_cnt === 0} limit={pageLength} page={page} setPage={setPage} />
