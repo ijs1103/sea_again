@@ -1,9 +1,5 @@
 import Message from '@components/layout/Message'
 import { Review } from '@prisma/client'
-import { cls } from '@utils/index'
-import { ResponseType, createReviewType } from '@utils/interfaces'
-import { AxiosError } from 'axios'
-import { createReview, getReviews } from '@utils/fetchers/ownApi'
 import { useForm } from 'react-hook-form'
 import {
 	REVIEW_REGEX,
@@ -12,10 +8,11 @@ import {
 } from '@utils/constants'
 import useAuth from '@hooks/useAuth'
 import { useCallback, useState, useEffect, useRef } from 'react'
-import { useQuery, useMutation } from '@tanstack/react-query'
 import Loader from '@components/Loader'
 import Pagination from '@components/layout/Pagination'
 import CommentNotFound from '@components/tabmenu/CommentNotFound'
+import useReview from '@hooks/useQueries/useReview'
+import useCreateReview from '@hooks/useQueries/useCreateReview'
 
 
 interface ReviewWith extends Review {
@@ -33,26 +30,20 @@ interface ReviewForm {
 function Review({ beachName }: Props) {
 	const { isLogin, profile } = useAuth('getProfile')
 	const { register, handleSubmit, formState, reset } =
-		useForm<ReviewForm>({ mode: 'onSubmit' })
+		useForm<ReviewForm>({ mode: 'onChange' })
 	const [page, setPage] = useState(1)
-	const { data: reviewData, isLoading, refetch } = useQuery<any>(['review', beachName, page], () => getReviews({ beachName, limit: 5, offset: page > 0 ? (page - 1) * 5 : 0 }), { keepPreviousData: true })
-	const { mutate: newReviewMutate } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {
-		onSuccess: (data) => {
-			if (!data.ok) alert('로그인 후 후기를 작성해주세요.')
-			// 후기 작성이 완료되면 후기 데이터 refetch
-			refetch()
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+	const { data, reviewsRefetch, isLoading } = useReview(beachName, page)
+	const { createReview } = useCreateReview(reviewsRefetch)
+
 	const onValid = (form: ReviewForm) => {
-		newReviewMutate({ ...form, beachName })
+		createReview({ ...form, beachName })
 		reset({ "payload": "" })
 	}
 	const parseCreatedAt = useCallback((createdAt: Date) => {
 		const parsed = createdAt?.toString()
 		return `${parsed?.slice(0, 4)} ${parsed?.slice(5, 10)} ${parsed?.slice(11, 16)}`
 	}, [])
-	const pageLength = Math.ceil(reviewData?.total_cnt / PAGE_LIMIT)
+	const pageLength = Math.ceil(data?.total_cnt as number / PAGE_LIMIT)
 	const reviewRef = useRef<HTMLDivElement | null>(null)
 	const scollToTop = useCallback(() => {
 		if (!reviewRef.current) return
@@ -77,11 +68,11 @@ function Review({ beachName }: Props) {
 			<div className='relative mt-4 space-y-1'>
 				{isLoading ? <Loader /> :
 					// isMyReview: 내가 작성한 후기만 삭제를 허용 하기 위해, 내 후기 여부를 나타내는 boolean 값 
-					(reviewData?.total_cnt > 0) ?
-						reviewData?.reviews?.map((review: any) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={refetch} />)
+					(data?.total_cnt as number > 0) ?
+						data?.reviews?.map((review: Review) => <Message isMyReview={profile?.id === review?.userId} reviewId={review?.id} key={review?.id} reviewDate={parseCreatedAt(review?.createdAt)} userName={review?.user?.name} payload={review?.payload} onReFetch={reviewsRefetch} />)
 						: <CommentNotFound />
 				}
-				<Pagination isEmpty={reviewData?.total_cnt === 0} limit={pageLength} page={page} setPage={setPage} />
+				<Pagination isEmpty={data?.total_cnt === 0} limit={pageLength} page={page} setPage={setPage} />
 			</div>
 
 		</div>

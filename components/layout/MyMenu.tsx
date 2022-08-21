@@ -1,34 +1,20 @@
 import { cls } from '@utils/index'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { ResponseType } from '@utils/interfaces'
-import { userLogOut } from '@utils/fetchers/ownApi'
 import Link from 'next/link'
 import useAuth from '@hooks/useAuth'
-
+import useLogout from '@hooks/useQueries/useLogout'
 
 function MyMenu() {
 	const router = useRouter()
 	const { profile, isLogin } = useAuth('getProfile')
-	const { mutate: logOutMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError>(userLogOut, {
-		onSuccess: ({ data }) => {
-			if (data.ok) {
-				alert('로그아웃 되었습니다!')
-				document.location.href = "/map"
-			} else {
-				alert(data.error)
-			}
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+	const { logOut } = useLogout()
 	const [isActive, setActive] = useState(false)
 	const toggleDropDown = () => setActive((prev: boolean) => !prev)
 	const handleLogInOutClick = async () => {
 		if (isLogin) {
 			// httpOnly가 적용된 쿠키라 클라이언트에선 삭제 불가능, 서버에 쿠키 삭제 요청 
-			logOutMutate()
+			logOut()
 		} else {
 			router.push('/user/logIn')
 		}

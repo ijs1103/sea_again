@@ -1,11 +1,9 @@
 import Image from 'next/image'
 import { weatherToIcon } from 'utils/index'
-import { WeatherResponse } from '@utils/interfaces'
-import { useQuery } from '@tanstack/react-query'
-import { getWeather } from '@utils/fetchers/publicApi'
 import { convertHour } from '@utils/aboutTime'
 import { W_CATEGORY } from '@utils/constants'
 import Loader from '@components/Loader'
+import useWeather from '@hooks/useQueries/useWeather'
 
 interface Props {
 	lat: string
@@ -13,9 +11,7 @@ interface Props {
 }
 
 function Weather({ lat, lon }: Props) {
-	// enabled 옵션 :  lat(위도)과 lon(경도)값이 undefined가 아닐때에만 데이터 fetch가 실행된다 
-	const { data, isLoading, refetch } = useQuery<WeatherResponse[]>(['weather_forcast'], () => getWeather(lat, lon), { enabled: true })
-
+	const { weather, refetch, isLoading } = useWeather(lat, lon)
 	return (
 		<div className='relative flex flex-col items-center h-full'>
 			{isLoading ? <Loader /> :
@@ -27,10 +23,10 @@ function Weather({ lat, lon }: Props) {
 						<span className='text-[6px] sm:text-[10px]'>새로고침</span>
 					</div>
 
-					{data && data[0].fcstValue ? <Image src={`/${weatherToIcon({ PTY: +data[0].fcstValue, SKY: +data[1].fcstValue })}.gif`} width={100} height={100} alt='weather_img' /> : <div className='w-[100px] h-[100px] bg-lightGray'></div>}
-					<span className='text-xl font-extrabold text-black sm:text-2xl'>{data && data[2].fcstValue}℃</span>
-					<span className='text-sm sm:text-base text-fontSecondary'>{data && W_CATEGORY['PTY'][data[0].fcstValue]} | {data && W_CATEGORY['SKY'][data[1].fcstValue]}</span>
-					<span className='text-gray-500 text-[8px] sm:text-[12px] font-bold w-full text-right'>기상청 {data && convertHour(data[0].fcstTime)} 예보</span>
+					{weather && weather[0].fcstValue ? <Image src={`/${weatherToIcon({ PTY: +weather[0].fcstValue, SKY: +weather[1].fcstValue })}.gif`} width={100} height={100} alt='weather_img' /> : <div className='w-[100px] h-[100px] bg-lightGray'></div>}
+					<span className='text-xl font-extrabold text-black sm:text-2xl'>{weather && weather[2].fcstValue}℃</span>
+					<span className='text-sm sm:text-base text-fontSecondary'>{weather && W_CATEGORY['PTY'][weather[0].fcstValue]} | {weather && W_CATEGORY['SKY'][weather[1].fcstValue]}</span>
+					<span className='text-gray-500 text-[8px] sm:text-[12px] font-bold w-full text-right'>기상청 {weather && convertHour(weather[0].fcstTime)} 예보</span>
 				</>
 			}
 		</div>

@@ -11,30 +11,14 @@ import {
 	PW_REGEX,
 	EMAIL_REGEX,
 } from '@utils/constants'
-import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { ResponseType } from '@utils/interfaces'
-import { userLogIn } from '@utils/fetchers/ownApi'
-import { useRouter } from 'next/router'
+import useLogin from '@hooks/useQueries/useLogin'
 
 function LogIn() {
-	const router = useRouter()
 	const { register, handleSubmit, formState } =
 		useForm<LoginForm>({ mode: "onChange" })
-	const { mutate: loginMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, LoginForm>(userLogIn, {
-		onSuccess: ({ data }) => {
-			if (data.ok) {
-				alert('로그인 성공!!')
-				router.push('/map')
-			} else {
-				alert(data.error)
-			}
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+	const { login } = useLogin()
 	const onValid = (form: LoginForm) => {
-		//login 로직
-		loginMutate({ ...form })
+		login({ ...form })
 	}
 	return (
 		<MobileLayout isGoBack={false}>

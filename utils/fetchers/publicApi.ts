@@ -9,6 +9,7 @@ import {
 import {} from '@utils/constants'
 import { getCurrentTime, timestampToDate } from '@utils/aboutTime'
 import { latLngToXy } from '@utils/index'
+import { BeachResponse } from '@utils/interfaces'
 
 const getWeather = async (lat: string, lon: string) => {
   const {
@@ -60,7 +61,7 @@ const getBeach = async (SIDO_NM: string) => {
     data: {
       getOceansBeachInfo: { item },
     },
-  } = await axios.get<any>(BEACH_BASE_URL, {
+  } = await axios.get<BeachResponse[]>(BEACH_BASE_URL, {
     params,
   })
   return item

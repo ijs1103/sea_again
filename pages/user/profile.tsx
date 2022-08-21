@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import MobileLayout from '@components/layout/MobileLayout'
 import FormLayout from '@components/layout/FormLayout'
 import Button from '@components/layout/Button'
@@ -10,28 +9,16 @@ import {
 	PW_REGEX,
 } from '@utils/constants'
 import useAuth from '@hooks/useAuth'
-import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { editAccount } from '@utils/fetchers/ownApi'
-import { EditAccountType, ResponseType } from '@utils/interfaces'
+import useEditProfile from '@hooks/useQueries/useEditProfile'
 
 function Profile() {
 	const { profile } = useAuth('auth')
 	const { register, handleSubmit, formState, getValues } =
 		useForm<ProfileForm>({ mode: "onChange" })
-	const { mutate: editProfileMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, EditAccountType>(editAccount, {
-		onSuccess: ({ data }) => {
-			if (data.ok) {
-				alert('프로필이 변경 되었습니다')
-			} else {
-				alert(data.error)
-			}
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+	const { editProfile } = useEditProfile()
 	const onValid = (form: ProfileForm) => {
 		const { name, new_password } = form
-		editProfileMutate({ ...(name && { name: name }), password: new_password, email: profile?.email })
+		editProfile({ ...(name && { name: name }), password: new_password, email: profile?.email })
 	}
 	return (
 		<MobileLayout isGoBack={false}>

@@ -11,7 +11,6 @@ export default async function handler(
   const {
     query: { name },
   } = req
-  console.log(name)
   // jwt 토큰 검증
   const token = parseCookies(req.headers.cookie)['token']
   if (!token) return res.json({ ok: false })

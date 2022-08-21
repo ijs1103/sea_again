@@ -3,17 +3,17 @@ import SearchResult from '@components/layout/SearchResult';
 import Modal from '@components/Modal';
 import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IAddMarker } from '@utils/interfaces'
 import MyMenu from '@components/layout/MyMenu';
 import useGeolocation from '@hooks/useGeolocation';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios'
-
-import { getLikedBeach, toggleLikeFetcher } from '@utils/fetchers/ownApi'
 import { useAppSelector, useAppDispatch } from "@store/index"
 import { setLikedBeachs, fetchSelected, fetchTopTen } from '@store/slice/beachSlice';
 import ToggleButton from '@components/ToggleButton';
+import useLikedBeach from '@hooks/useQueries/useLikedBeach';
+import useToggleLike from '@hooks/useQueries/useToggleLike';
+
+
 
 declare global {
 	interface Window {
@@ -38,8 +38,8 @@ function Map() {
 	const [overlays, setOverlays] = useState<any[]>([]);
 	const [isModalOn, setIsModalOn] = useState(false)
 	const { coordinates } = useGeolocation()
-	const { data, isSuccess, error } = useQuery<any>(['likedBeachs', router.query.userId], () => getLikedBeach(router.query.userId), { enabled: !!router.query.userId })
-	const { mutate: toggleLike } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
+	const { likedBeachRes } = useLikedBeach(router?.query?.userId as string)
+	const { toggleLike } = useToggleLike()
 	const [rePaintFlag, setRePaintFlag] = useState(false)
 	const handleModalClose = () => setIsModalOn(false)
 	const removeTopTen = () => {
@@ -48,14 +48,14 @@ function Map() {
 	}
 	// 좋아요 한 해수욕장이 있으면 전역상태로 저장 , 좋아요 한 해수욕장이 없으면 alert 표시후 뒤로가기 
 	useEffect(() => {
-		if (!data) return
-		if (data.ok) {
-			dispatch(setLikedBeachs(data.likedBeachs))
+		if (!likedBeachRes) return
+		if (likedBeachRes.ok) {
+			dispatch(setLikedBeachs(likedBeachRes.likedBeachs))
 		} else {
-			alert(data.error)
+			alert(likedBeachRes.error)
 			router.back()
 		}
-	}, [data])
+	}, [likedBeachRes])
 	useEffect(() => {
 		if (mode !== 'topTen') return
 		dispatch(fetchTopTen())
@@ -192,12 +192,12 @@ function Map() {
 				likedMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const bounds = new window.kakao.maps.LatLngBounds()
-				drawMarkers(data?.likedBeachs, bounds, likedMap.current)
+				drawMarkers(likedBeachRes?.likedBeachs, bounds, likedMap.current)
 				likedMap.current.setBounds(bounds)
 			})
 		}
 		return () => script.remove()
-	}, [data])
+	}, [likedBeachRes])
 
 	// 해수욕장 검색 결과만 표시하는 지도 
 	useEffect(() => {

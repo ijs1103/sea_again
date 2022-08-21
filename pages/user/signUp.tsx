@@ -5,35 +5,22 @@ import Link from 'next/link'
 import Button from '@components/layout/Button'
 import { useForm } from 'react-hook-form'
 import FormInput from '@components/FormInput'
-import { SignUpForm, AccountType, ResponseType } from '@utils/interfaces'
+import { SignUpForm } from '@utils/interfaces'
 import {
 	FORM_ERR_MSG, NAME_REGEX,
 	PW_REGEX,
 	EMAIL_REGEX,
 } from '@utils/constants'
-import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { createAccount } from '@utils/fetchers/ownApi'
-import { useRouter } from 'next/router'
+import useSignup from '@hooks/useQueries/useSignup'
+
 
 function SignUp() {
-	const router = useRouter()
 	const { register, handleSubmit, formState, getValues } =
 		useForm<SignUpForm>({ mode: "onChange" })
-	const { mutate: signUpMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, AccountType>(createAccount, {
-		onSuccess: ({ data }) => {
-			if (data.ok) {
-				alert('가입을 축하합니다!!')
-				router.push('/user/logIn')
-			} else {
-				alert(data.error)
-			}
-		},
-		onError: (error) => console.log('axios 에러 : ', error)
-	})
+	const { signUp } = useSignup()
 	const onValid = (form: SignUpForm) => {
 		const { email, name, password } = form
-		signUpMutate({ email, name, password })
+		signUp({ email, name, password })
 	}
 	return (
 		<MobileLayout isGoBack={false}>

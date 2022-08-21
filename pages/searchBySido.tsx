@@ -1,20 +1,19 @@
 import MobileLayout from '@components/layout/MobileLayout'
-import { useQuery } from '@tanstack/react-query'
 import { SIDO_ARR } from '@utils/constants'
 import { useState } from 'react'
-import { getBeach } from '@utils/fetchers/publicApi'
 import { cls } from '@utils/index'
 import { useRouter } from 'next/router'
 import Button from '@components/layout/Button'
 import Loader from '@components/Loader'
 import { useAppDispatch } from "@store/index"
 import { setSearched } from '@store/slice/beachSlice'
+import useBeachBySido from '@hooks/useQueries/useBeachBySido'
 
 function SearchBySido() {
 	const dispatch = useAppDispatch()
 	const router = useRouter()
 	const [curSido, setCurSido] = useState('인천')
-	const { data, isLoading, error } = useQuery<any>(['beach', curSido], () => getBeach(curSido))
+	const { beachs, isLoading, error } = useBeachBySido(curSido)
 	const hanldeClick = () => router.push('/map')
 	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.dataset.beach) return
@@ -42,11 +41,11 @@ function SearchBySido() {
 						<aside className="relative w-3/5 overflow-y-auto max-h-[500px]" aria-label="Sidebar">
 							<div className="px-6 py-6 ">
 								<ul className=" font-medium text-xs text-[#161616] bg-white">
-									{!isLoading && data?.map(beach =>
+									{!isLoading && beachs?.map(beach =>
 										<li key={beach.num} className="w-full rounded-t-lg">
 											<div className="flex items-center pl-3">
-												<input id={beach.num} type="radio" data-beach={JSON.stringify(beach)} value={beach.num} onChange={handleRadioChange} name="list-beach" className="w-4 h-4 text-blue-600 bg-[primary] border-gray-300 focus:ring-blue-500" />
-												<label htmlFor={beach.num} className="w-full py-3 ml-2 select-none">{beach.sta_nm}</label>
+												<input id={beach.num + ""} type="radio" data-beach={JSON.stringify(beach)} value={beach.num} onChange={handleRadioChange} name="list-beach" className="w-4 h-4 text-blue-600 bg-[primary] border-gray-300 focus:ring-blue-500" />
+												<label htmlFor={beach.num + ""} className="w-full py-3 ml-2 select-none">{beach.sta_nm}</label>
 											</div>
 										</li>
 									)}
