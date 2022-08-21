@@ -8,15 +8,16 @@ import { authFetcher } from '@utils/fetchers/ownApi'
 function useAuth(mode: 'getProfile' | 'auth') {
   const router = useRouter()
   const { data, isLoading } = useQuery<any>(['auth'], authFetcher)
+  console.log(data)
   useEffect(() => {
-    if (mode === 'auth' && data && !data.data.ok && router.isReady)
+    if (mode === 'auth' && data && !data.ok && router.isReady)
       router.replace('/user/logIn')
   }, [data, router])
 
   return {
-    profile: data?.data?.user,
+    profile: data?.user,
     loading: isLoading,
-    isLogin: data?.data?.ok,
+    isLogin: data?.ok,
   }
 }
 

@@ -7,9 +7,9 @@ import {
   getReviewsType,
 } from '@utils/interfaces'
 
-const authFetcher = () => {
-  const res = axios.get('/api/user/validateUser')
-  return res
+const authFetcher = async () => {
+  const { data } = await axios.get('/api/user/validateUser')
+  return data
 }
 const createAccount = async (newAccount: AccountType) => {
   const res = await axios.post('/api/user/signUp', newAccount)
@@ -55,10 +55,7 @@ const getLikedBeach = async (userId: string) => {
   const { data } = await axios.get(`/api/user/getLikedBeach/${userId}`)
   return data
 }
-const getToptenBeach = async () => {
-  const { data } = await axios.get('api/beach/topTen')
-  return data
-}
+
 export {
   authFetcher,
   createAccount,
@@ -71,5 +68,4 @@ export {
   getReviews,
   deleteReview,
   getLikedBeach,
-  getToptenBeach,
 }

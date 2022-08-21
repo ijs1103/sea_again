@@ -1,5 +1,5 @@
 import { cls } from '@utils/index'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
@@ -24,7 +24,7 @@ function MyMenu() {
 		onError: (error) => console.log('axios 에러 : ', error)
 	})
 	const [isActive, setActive] = useState(false)
-	const toggleDropDown = useCallback(() => setActive((prev: any) => !prev), [])
+	const toggleDropDown = () => setActive((prev: boolean) => !prev)
 	const handleLogInOutClick = async () => {
 		if (isLogin) {
 			// httpOnly가 적용된 쿠키라 클라이언트에선 삭제 불가능, 서버에 쿠키 삭제 요청 

@@ -20,6 +20,7 @@ async function handler(
             name: String(`${beach.gugun_nm} ${beach.sta_nm}`),
             lat: beach.lat,
             lng: beach.lon,
+            sido_nm: beach.sido_nm,
           },
         }),
       1000

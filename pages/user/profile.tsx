@@ -16,7 +16,7 @@ import { editAccount } from '@utils/fetchers/ownApi'
 import { EditAccountType, ResponseType } from '@utils/interfaces'
 
 function Profile() {
-	const { profile, loading } = useAuth('auth')
+	const { profile } = useAuth('auth')
 	const { register, handleSubmit, formState, getValues } =
 		useForm<ProfileForm>({ mode: "onChange" })
 	const { mutate: editProfileMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, EditAccountType>(editAccount, {

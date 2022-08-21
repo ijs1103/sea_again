@@ -17,6 +17,7 @@ model Beach {
   likes Like[]
   reviews Review[]
   name String @unique
+  sido_nm String
   lat String
   lng String
   createdAt DateTime @default(now())

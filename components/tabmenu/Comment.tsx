@@ -33,7 +33,7 @@ interface ReviewForm {
 function Review({ beachName }: Props) {
 	const { isLogin, profile } = useAuth('getProfile')
 	const { register, handleSubmit, formState, reset } =
-		useForm<ReviewForm>({ mode: 'onChange' })
+		useForm<ReviewForm>({ mode: 'onSubmit' })
 	const [page, setPage] = useState(1)
 	const { data: reviewData, isLoading, refetch } = useQuery<any>(['review', beachName, page], () => getReviews({ beachName, limit: 5, offset: page > 0 ? (page - 1) * 5 : 0 }), { keepPreviousData: true })
 	const { mutate: newReviewMutate } = useMutation<ResponseType, AxiosError, createReviewType>(createReview, {

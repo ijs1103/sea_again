@@ -10,11 +10,10 @@ import useGeolocation from '@hooks/useGeolocation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios'
 
-import { getLikedBeach, getToptenBeach, toggleLikeFetcher } from '@utils/fetchers/ownApi'
+import { getLikedBeach, toggleLikeFetcher } from '@utils/fetchers/ownApi'
 import { useAppSelector, useAppDispatch } from "@store/index"
-import { setLikedBeachs, setLikedBeach } from '@store/slice/beachSlice';
+import { setLikedBeachs, fetchSelected, fetchTopTen } from '@store/slice/beachSlice';
 import ToggleButton from '@components/ToggleButton';
-
 
 declare global {
 	interface Window {
@@ -40,7 +39,6 @@ function Map() {
 	const [isModalOn, setIsModalOn] = useState(false)
 	const { coordinates } = useGeolocation()
 	const { data, isSuccess, error } = useQuery<any>(['likedBeachs', router.query.userId], () => getLikedBeach(router.query.userId), { enabled: !!router.query.userId })
-	const { data: topTenData } = useQuery<any>(['topTenBeachs'], getToptenBeach, { enabled: mode === 'topTen' })
 	const { mutate: toggleLike } = useMutation<ResponseType, AxiosError, string>(toggleLikeFetcher)
 	const [rePaintFlag, setRePaintFlag] = useState(false)
 	const handleModalClose = () => setIsModalOn(false)
@@ -53,7 +51,11 @@ function Map() {
 		if (!data) return
 		data.ok ? dispatch(setLikedBeachs(data.likedBeachs)) : alert(data.error)
 	}, [data])
-	const addMarker = ({ position, map, beachName, rank }: IAddMarker) => {
+	useEffect(() => {
+		if (mode !== 'topTen') return
+		dispatch(fetchTopTen())
+	}, [mode])
+	const addMarker = ({ position, map, beachName, rank, sido_nm }: IAddMarker) => {
 		const imageSrc = (mode === 'liked') ? './like_marker.png' : './custom_marker.png',
 			imageSize = new window.kakao.maps.Size((mode === 'liked') ? 40 : 30, 40),
 			imageOption = { offset: new window.kakao.maps.Point(27, 69) };
@@ -82,11 +84,20 @@ function Map() {
 		});
 		// 찜한 해수욕장 마커를 클릭하면 찜해제 기능 
 		(mode === 'liked') && window.kakao.maps.event.addListener(marker, 'click', function () {
-
 			if (confirm(`정말로 ${beachName}을(를) 좋아요 해제 하시겠습니까?`)) {
 				beachName && toggleLike(beachName)
 				window.location.href = router.asPath
 			}
+		});
+		// 검색한 해수욕장 데이터를 조회 할때에만 모달창에 클릭 이벤트를 할당합니다
+		(mode === 'topTen') && window.kakao.maps.event.addListener(marker, 'click', function () {
+			const gugun_nm = beachName?.split(' ')[0]
+			const sta_nm = beachName?.split(' ')[1]
+			if (!sido_nm || !gugun_nm || !sta_nm) return
+			console.log(sido_nm, gugun_nm, sta_nm)
+			dispatch(fetchSelected({ sido_nm, gugun_nm, sta_nm }))
+			setMode('search')
+			setIsModalOn(true)
 		});
 		if (['liked'].includes(mode)) overlay.setMap(null)
 		mode !== 'topTen' && window.kakao.maps.event.addListener(marker, 'mouseover', function () {
@@ -113,13 +124,13 @@ function Map() {
 	function drawMarkers(positions: any, bounds: any, map: any) {
 		positions.forEach((cur: any, idx: number) => {
 			const position = new window.kakao.maps.LatLng(cur.lat, cur.lng)
-			addMarker({ position, map, beachName: cur.name, rank: idx + 1 })
+			addMarker({ position, map, beachName: cur.name, rank: idx + 1, sido_nm: cur.sido_nm })
 			bounds.extend(position)
 		})
 	}
 	// 유저들의 좋아요 기준 top 10의 해수욕장들을 표시하는 지도
 	useEffect(() => {
-		if (mode !== 'topTen' || !topTenData || !rePaintFlag) return
+		if (mode !== 'topTen' || !beachState.topTen || !rePaintFlag) return
 		const script = document.createElement('script')
 		script.src = KAKAO_MAP_URL
 		document.head.appendChild(script)
@@ -143,12 +154,12 @@ function Map() {
 				topTenMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const bounds = new window.kakao.maps.LatLngBounds()
-				drawMarkers(topTenData?.topTenBeach, bounds, topTenMap.current)
+				drawMarkers(beachState?.topTen, bounds, topTenMap.current)
 				topTenMap.current.setBounds(bounds)
 			})
 		}
 		return () => script.remove()
-	}, [mode, topTenData, rePaintFlag])
+	}, [mode, beachState?.topTen, rePaintFlag])
 
 	// 로그인한 유저가 좋아요한 해수욕장들을 표시하는 지도
 	useEffect(() => {
@@ -282,9 +293,10 @@ function Map() {
 			<MyMenu />
 			<SearchBar />
 			<ToggleButton setRePaintFlag={() => setRePaintFlag(prev => !prev)} removeTopTen={removeTopTen} setTopTen={() => setMode('topTen')} />
+			{mode === 'topTen' && <SearchResult type="topTen" keyword='좋아요 TOP 10' />}
 			{mode === 'liked' && beachState.likedBeachs && beachState.likedBeachs.length > 0 && <SearchResult type="liked" keyword={beachState?.likedBeachs?.length + ""} />}
 			{mode === 'search' && beachState.searchedBeach && <SearchResult type="search" keyword={beachState.searchedBeach.sta_nm} />}
-			{mode === 'search' && isModalOn && <Modal key='searchedModal' onModalClose={handleModalClose} beachData={beachState.searchedBeach} />}
+			{mode === 'search' && isModalOn && <Modal onModalClose={handleModalClose} beachData={beachState.searchedBeach} />}
 		</div>
 
 	);

@@ -58,6 +58,7 @@ export interface AccountType {
 export interface EditAccountType {
   name?: string
   password: string
+  email: string
 }
 export interface ProfileForm {
   name: string
@@ -85,5 +86,6 @@ export interface IAddMarker {
   position: Position
   map: any
   beachName?: string
+  sido_nm?: string
   rank?: number
 }

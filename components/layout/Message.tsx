@@ -15,7 +15,6 @@ interface Props {
 	onReFetch: () => void
 }
 function Message({ isMyReview, reviewId, userName, payload, reviewDate, onReFetch }: Props) {
-	const { isLogin } = useAuth('getProfile')
 	const { mutate: deleteMutate, isLoading, isSuccess, isError, error } = useMutation<ResponseType, AxiosError, { reviewId: number }>(deleteReview, {
 		onSuccess: (data) => {
 			if (data.ok) {

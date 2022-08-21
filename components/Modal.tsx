@@ -22,6 +22,7 @@ interface Props {
 }
 
 const Modal = ({ onModalClose, beachData }: Props) => {
+	console.log(beachData)
 	const { isLogin } = useAuth('getProfile')
 	const queryClient = useQueryClient()
 	const { beach_img, sido_nm, gugun_nm, sta_nm, link_addr, link_tel, beach_knd, lat, lon } = beachData
