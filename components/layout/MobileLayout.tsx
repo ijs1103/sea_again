@@ -9,9 +9,9 @@ interface Props {
 function MobileLayout({ children, isGoBack }: Props) {
   const router = useRouter()
   return (
-    <div className="max-w-lg p-6 mx-auto bg-white  sm:p-0">
+    <div className="max-w-lg px-6 py-2 pb-6 mx-auto bg-white sm:p-0">
       {isGoBack ?
-        <a onClick={() => router.back()} className="block mb-4 sm:static sm:my-2">
+        <a onClick={() => router.back()} className="block mb-2 sm:inline sm:my-2">
           <svg
             className="back-btn"
             fill="currentColor"

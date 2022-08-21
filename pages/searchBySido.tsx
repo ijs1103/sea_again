@@ -13,11 +13,13 @@ function SearchBySido() {
 	const dispatch = useAppDispatch()
 	const router = useRouter()
 	const [curSido, setCurSido] = useState('인천')
-	const { beachs, isLoading, error } = useBeachBySido(curSido)
+	const [isRadioSelected, setIsRadioSelected] = useState(false)
+	const { beachs, isLoading } = useBeachBySido(curSido)
 	const hanldeClick = () => router.push('/map')
 	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.dataset.beach) return
 		dispatch(setSearched(JSON.parse(e.target.dataset.beach)))
+		!isRadioSelected && setIsRadioSelected(true)
 	}
 	return (
 		<MobileLayout isGoBack={true}>
@@ -51,11 +53,10 @@ function SearchBySido() {
 									)}
 								</ul>
 							</div>
-							{/* spinner */}
 							{isLoading && <Loader />}
 						</aside>
 					</div>
-					<Button onClick={hanldeClick}>검색</Button>
+					<Button disabled={!isRadioSelected} onClick={hanldeClick}>검색</Button>
 				</div>
 			</div>
 
