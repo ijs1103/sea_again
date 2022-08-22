@@ -20,7 +20,7 @@ interface Props {
 interface ReviewForm {
 	payload: string
 }
-function Review({ beachName }: Props) {
+function Comment({ beachName }: Props) {
 	const { isLogin, profile } = useAuth('getProfile')
 	const { register, handleSubmit, formState, reset } =
 		useForm<ReviewForm>({ mode: 'onChange' })
@@ -72,4 +72,4 @@ function Review({ beachName }: Props) {
 	)
 }
 
-export default Review
+export default Comment

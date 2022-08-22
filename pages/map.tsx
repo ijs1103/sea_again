@@ -12,7 +12,7 @@ import { setLikedBeachs, fetchSelected, fetchTopTen } from '@store/slice/beachSl
 import ToggleButton from '@components/ToggleButton';
 import useLikedBeach from '@hooks/useQueries/useLikedBeach';
 import useToggleLike from '@hooks/useQueries/useToggleLike';
-
+import MapSkeleton from '@components/MapSkeleton';
 
 
 declare global {
@@ -33,11 +33,11 @@ function Map() {
 	const likedMap = useRef<any>(null)
 	const topTenMapRef = useRef<HTMLDivElement | null>(null)
 	const topTenMap = useRef<any>(null)
-	const [mode, setMode] = useState<'search' | 'liked' | 'myArea' | 'topTen'>('myArea')
+	const [mode, setMode] = useState<string>('myArea')
 	const [markers, setMarkers] = useState<any[]>([]);
 	const [overlays, setOverlays] = useState<any[]>([]);
 	const [isModalOn, setIsModalOn] = useState(false)
-	const { coordinates } = useGeolocation()
+	const { coordinates, loaded: isGpsLoaded } = useGeolocation()
 	const { likedBeachRes } = useLikedBeach(router?.query?.userId as string)
 	const { toggleLike } = useToggleLike()
 	const [rePaintFlag, setRePaintFlag] = useState(false)
@@ -46,20 +46,7 @@ function Map() {
 		markers.forEach(cur => cur.setMap(null))
 		overlays.forEach(cur => cur.setMap(null))
 	}
-	// 좋아요 한 해수욕장이 있으면 전역상태로 저장 , 좋아요 한 해수욕장이 없으면 alert 표시후 뒤로가기 
-	useEffect(() => {
-		if (!likedBeachRes) return
-		if (likedBeachRes.ok) {
-			dispatch(setLikedBeachs(likedBeachRes.likedBeachs))
-		} else {
-			alert(likedBeachRes.error)
-			router.back()
-		}
-	}, [likedBeachRes])
-	useEffect(() => {
-		if (mode !== 'topTen') return
-		dispatch(fetchTopTen())
-	}, [mode])
+	// 하나의 마커 추가
 	const addMarker = ({ position, map, beachName, rank, sido_nm }: IAddMarker) => {
 		const imageSrc = (mode === 'liked') ? './like_marker.png' : './custom_marker.png',
 			imageSize = new window.kakao.maps.Size((mode === 'liked') ? 40 : 30, 40),
@@ -115,7 +102,30 @@ function Map() {
 		setMarkers(prev => [...prev, marker]);
 		setOverlays(prev => [...prev, overlay])
 	}
-
+	// 다수의 마커 추가 
+	const addMarkers = (positions: any, bounds: any, map: any) => {
+		positions.forEach((cur: any, idx: number) => {
+			const position = new window.kakao.maps.LatLng(cur.lat, cur.lng)
+			addMarker({ position, map, beachName: cur.name, rank: idx + 1, sido_nm: cur.sido_nm })
+			bounds.extend(position)
+		})
+	}
+	// 좋아요 한 해수욕장이 있으면 전역상태로 저장 , 좋아요 한 해수욕장이 없으면 alert 표시후 뒤로가기 
+	useEffect(() => {
+		if (!likedBeachRes) return
+		if (likedBeachRes.ok) {
+			dispatch(setLikedBeachs(likedBeachRes.likedBeachs))
+		} else {
+			alert(likedBeachRes.error)
+			router.back()
+		}
+	}, [likedBeachRes])
+	// top 10 해수욕장 조회시 data fetch
+	useEffect(() => {
+		if (mode !== 'topTen') return
+		dispatch(fetchTopTen())
+	}, [mode])
+	// 조건부 mode 설정 
 	useEffect(() => {
 		if (!router.isReady) return
 		if (beachState.searchedBeach) {
@@ -126,13 +136,6 @@ function Map() {
 
 	}, [router.isReady])
 
-	function drawMarkers(positions: any, bounds: any, map: any) {
-		positions.forEach((cur: any, idx: number) => {
-			const position = new window.kakao.maps.LatLng(cur.lat, cur.lng)
-			addMarker({ position, map, beachName: cur.name, rank: idx + 1, sido_nm: cur.sido_nm })
-			bounds.extend(position)
-		})
-	}
 	// 유저들의 좋아요 기준 top 10의 해수욕장들을 표시하는 지도
 	useEffect(() => {
 		if (mode !== 'topTen' || !beachState.topTen || !rePaintFlag) return
@@ -159,7 +162,7 @@ function Map() {
 				topTenMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const bounds = new window.kakao.maps.LatLngBounds()
-				drawMarkers(beachState?.topTen, bounds, topTenMap.current)
+				addMarkers(beachState?.topTen, bounds, topTenMap.current)
 				topTenMap.current.setBounds(bounds)
 			})
 		}
@@ -192,7 +195,7 @@ function Map() {
 				likedMap.current.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 				markers.forEach(cur => cur.setMap(null));
 				const bounds = new window.kakao.maps.LatLngBounds()
-				drawMarkers(likedBeachRes?.likedBeachs, bounds, likedMap.current)
+				addMarkers(likedBeachRes?.likedBeachs, bounds, likedMap.current)
 				likedMap.current.setBounds(bounds)
 			})
 		}
@@ -239,7 +242,7 @@ function Map() {
 
 	// 현재 유저의 위치만 표시하는 지도 
 	useEffect(() => {
-		if (mode !== 'myArea') return
+		if (mode !== 'myArea' || !isGpsLoaded) return
 		const script = document.createElement('script')
 		script.src = KAKAO_MAP_URL
 		document.head.appendChild(script)
@@ -283,17 +286,20 @@ function Map() {
 					ref={likedMapRef}
 					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
 				></div>}
-			{mode === 'myArea' &&
-				<div
-					ref={mapRef}
-					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
-				></div>
-			}
 			{mode === 'topTen' &&
 				<div
 					ref={topTenMapRef}
 					className='fixed top-0 left-0 w-full h-screen shadow-2xl'
 				></div>
+			}
+			{mode === 'myArea' &&
+				<>
+					<MapSkeleton enabled={isGpsLoaded} />
+					<div
+						ref={mapRef}
+						className='fixed top-0 left-0 w-full h-screen shadow-2xl'
+					></div>
+				</>
 			}
 			<MyMenu />
 			<SearchBar />

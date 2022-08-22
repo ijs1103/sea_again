@@ -11,13 +11,15 @@ import { store } from '@store/index'
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient({});
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <Component {...pageProps} />
-        </Hydrate>
-      </QueryClientProvider>
-    </Provider>
+    <>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+        </QueryClientProvider>
+      </Provider>
+    </>
   )
 }
 
