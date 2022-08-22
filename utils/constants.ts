@@ -65,6 +65,7 @@ const PAGE_LIMIT = 5
 
 const BLUR_DATA_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOME39dDwAEHAHhJqXM7gAAAABJRU5ErkJggg=='
+const BUCKET_URL = 'https://seaagainuploads.s3.ap-northeast-2.amazonaws.com/'
 export {
   KAKAO_MAP_URL,
   WEATHER_BASE_URL,
@@ -83,4 +84,5 @@ export {
   REVIEW_REGEX,
   PAGE_LIMIT,
   BLUR_DATA_URL,
+  BUCKET_URL,
 }

@@ -5,25 +5,69 @@ import { useForm } from 'react-hook-form'
 import FormInput from '@components/FormInput'
 import { ProfileForm } from '@utils/interfaces'
 import {
+	BUCKET_URL,
 	FORM_ERR_MSG, NAME_REGEX,
 	PW_REGEX,
 } from '@utils/constants'
 import useAuth from '@hooks/useAuth'
 import useEditProfile from '@hooks/useQueries/useEditProfile'
+import Avatar from '@components/layout/Avatar'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import axios from 'axios'
+
 
 function Profile() {
 	const { profile } = useAuth('auth')
-	const { register, handleSubmit, formState, getValues } =
+	const { register, handleSubmit, formState, getValues, watch } =
 		useForm<ProfileForm>({ mode: "onChange" })
 	const { editProfile } = useEditProfile()
-	const onValid = (form: ProfileForm) => {
-		const { name, new_password } = form
-		editProfile({ ...(name && { name: name }), password: new_password, email: profile?.email })
+	const [preview, setPreview] = useState<string>('')
+	const avatar = watch('avatar')
+	let blobUrl = ""
+	// blob 생성 
+	useEffect(() => {
+		if (avatar && avatar.length > 0) {
+			const file = avatar[0]
+			blobUrl = URL.createObjectURL(file)
+			setPreview(blobUrl)
+		}
+		return () => {
+			URL.revokeObjectURL(blobUrl)
+		}
+	}, [avatar])
+
+	const onValid = async (form: ProfileForm) => {
+		const { new_password } = form
+		let newAvatar = ''
+		if (avatar && avatar.length > 0) {
+			const file = avatar[0]
+			const { data: { url, objectName } } = await axios.post('/api/user/uploadAvatar', { name: file.name, type: file.type })
+			console.log(url, objectName)
+			await axios.put(url, file, {
+				headers: {
+					'Content-type': file.type,
+					'Access-Control-Allow-Origin': '*',
+				},
+			})
+			newAvatar = BUCKET_URL + objectName
+		}
+		editProfile({ ...(avatar && { avatar: newAvatar }), ...(form?.name && { name: form?.name }), password: new_password, email: profile?.email })
 	}
+
 	return (
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='프로필 변경'>
 				<form onSubmit={handleSubmit(onValid)} className='form-layout'>
+					<label className='block mx-auto cursor-pointer'>
+						<Avatar url={preview ? preview : profile?.avatar} />
+						<input
+							{...register('avatar')}
+							type='file'
+							accept='image/*'
+							className='hidden'
+						/>
+					</label>
 					<span className='text-primary text-[12px] text-right'>* 정보 변경을 위해 새 비밀번호를 입력 해주세요</span>
 					<div>
 						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>

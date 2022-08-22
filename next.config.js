@@ -5,6 +5,9 @@ const nextConfig = {
     BASE_URL: process.env.BASE_URL,
   },
   swcMinify: true,
+  images: {
+    domains: ['seaagainuploads.s3.ap-northeast-2.amazonaws.com'],
+  },
   async rewrites() {
     return [
       {

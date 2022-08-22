@@ -8,7 +8,7 @@ async function handler(
 ) {
   const { password, email } = req.body
   const newName = req.body?.name
-  console.log(newName, password, email)
+  const newAvatar = req.body?.avatar
   if (!password || !email) return res.status(400).json({ ok: false })
   const existingUser = await client.user.findUnique({
     where: {
@@ -36,6 +36,7 @@ async function handler(
     },
     data: {
       ...(newName && { name: newName }),
+      ...(newAvatar && { avatar: newAvatar }),
       password: hashedPw,
     },
   })

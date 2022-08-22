@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^1.8.4",
     "@tanstack/react-query": "^4.0.10",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "aws-sdk": "^2.1199.0",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cookies-next": "^2.1.1",

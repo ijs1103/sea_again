@@ -59,11 +59,13 @@ export interface EditAccountType {
   name?: string
   password: string
   email: string
+  avatar?: string
 }
 export interface ProfileForm {
   name: string
   new_password: string
   confirm_password: string
+  avatar: FileList
 }
 export interface ResponseType {
   ok: boolean
