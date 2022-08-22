@@ -304,7 +304,7 @@ function Map() {
 			<MyMenu />
 			<SearchBar />
 			<ToggleButton setRePaintFlag={() => setRePaintFlag(prev => !prev)} removeTopTen={removeTopTen} setTopTen={() => setMode('topTen')} />
-			{mode === 'topTen' && <SearchResult type="topTen" keyword='좋아요 TOP 10' />}
+			{mode === 'topTen' && <SearchResult isActive={rePaintFlag} type="topTen" keyword='좋아요 TOP 10' />}
 			{mode === 'liked' && beachState.likedBeachs && beachState.likedBeachs.length > 0 && <SearchResult type="liked" keyword={beachState?.likedBeachs?.length + ""} />}
 			{mode === 'search' && beachState.searchedBeach && <SearchResult type="search" keyword={beachState.searchedBeach.sta_nm} />}
 			{mode === 'search' && isModalOn && <Modal onModalClose={handleModalClose} beachData={beachState.searchedBeach} />}
