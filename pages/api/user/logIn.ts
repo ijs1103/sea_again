@@ -17,16 +17,24 @@ async function handler(
   const isPwCorrect = await bcrypt.compare(password, user.password)
   if (!isPwCorrect)
     return res.json({ ok: false, error: '올바른 비밀번호가 아닙니다.' })
-  const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY as string)
-  setCookie('token', token, {
+  const accessToken = jwt.sign(
+    { id: user.id },
+    process.env.SECRET_KEY as string,
+    {
+      expiresIn: '14d',
+    }
+  )
+  setCookie('accessToken', accessToken, {
     req,
     res,
+    httpOnly: true,
+    secure: true,
     sameSite: 'strict',
-    maxAge: 1000 * 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 14,
   })
   res.json({
     ok: true,
-    token,
+    token: accessToken,
   })
 }
 

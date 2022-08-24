@@ -63,9 +63,6 @@ const beachSlice = createSlice({
   name: 'beach',
   initialState,
   reducers: {
-    setBeachName(state, { payload }) {
-      state.beachName = payload
-    },
     setSearched(state, { payload }) {
       state.searchedBeach = payload
     },
@@ -105,5 +102,4 @@ const beachSlice = createSlice({
 
 export const beachReducer = beachSlice.reducer
 
-export const { setBeachName, setSearched, setLikedBeachs, setLikedBeach } =
-  beachSlice.actions
+export const { setSearched, setLikedBeachs, setLikedBeach } = beachSlice.actions

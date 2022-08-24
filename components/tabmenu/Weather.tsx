@@ -10,7 +10,7 @@ interface Props {
 	lon: string
 }
 
-function Weather({ lat, lon }: Props) {
+const Weather = ({ lat, lon }: Props) => {
 	const { weather, refetch, isLoading } = useWeather(lat, lon)
 	return (
 		<div className='relative flex flex-col items-center h-full'>
@@ -22,7 +22,6 @@ function Weather({ lat, lon }: Props) {
 						</svg>
 						<span className='text-[6px] sm:text-[10px]'>새로고침</span>
 					</div>
-
 					{weather && weather[0].fcstValue ? <Image src={`/${weatherToIcon({ PTY: +weather[0].fcstValue, SKY: +weather[1].fcstValue })}.gif`} width={100} height={100} alt='weather_img' /> : <div className='w-[100px] h-[100px] bg-lightGray'></div>}
 					<span className='text-xl font-extrabold text-black sm:text-2xl'>{weather && weather[2].fcstValue}℃</span>
 					<span className='text-sm sm:text-base text-fontSecondary'>{weather && W_CATEGORY['PTY'][weather[0].fcstValue]} | {weather && W_CATEGORY['SKY'][weather[1].fcstValue]}</span>
@@ -32,6 +31,5 @@ function Weather({ lat, lon }: Props) {
 		</div>
 	)
 }
-
 export default Weather
 

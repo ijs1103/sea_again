@@ -6,7 +6,7 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  deleteCookie('token', { req, res })
+  deleteCookie('accessToken', { req, res })
   res.json({
     ok: true,
   })

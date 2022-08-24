@@ -1,22 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import client from '@libs/client'
 import { ResponseType } from '@utils/interfaces'
-import jwt from 'jsonwebtoken'
-import { parseCookies } from '@utils/index'
+import tokenValidator from '@libs/tokenValidator'
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse<ResponseType>,
+  userId: number
 ) {
   const {
     body: { reviewId },
   } = req
-  const token = parseCookies(req.headers.cookie)['token']
-  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   const myReview = await client.review.findFirst({
     where: {
       id: reviewId,
-      userId: id,
+      userId,
     },
   })
   // 내 후기가 아닌경우 삭제 방지 로직
@@ -35,4 +33,4 @@ async function handler(
   })
 }
 
-export default handler
+export default tokenValidator(handler)

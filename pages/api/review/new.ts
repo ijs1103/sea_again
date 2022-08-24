@@ -1,26 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import client from '@libs/client'
 import { ResponseType } from '@utils/interfaces'
-import jwt from 'jsonwebtoken'
-import { parseCookies } from '@utils/index'
+import tokenValidator from '@libs/tokenValidator'
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse<ResponseType>,
+  userId: number
 ) {
   const {
     body: { payload, beachName },
   } = req
-  const token = parseCookies(req.headers.cookie)['token']
-  // 쿠키가 없을때 처리
-  if (!token) return res.json({ ok: false })
-  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   const review = await client.review.create({
     data: {
       payload: String(payload),
       user: {
         connect: {
-          id,
+          id: userId,
         },
       },
       beach: {
@@ -43,4 +39,4 @@ async function handler(
   })
 }
 
-export default handler
+export default tokenValidator(handler)

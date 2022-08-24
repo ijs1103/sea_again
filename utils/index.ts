@@ -74,7 +74,7 @@ const parseCookies = (cookie = '') => {
 }
 
 const getRandomSrc = () =>
-  `/beaches/beach${Math.ceil(Math.random() * 20) + 1}.jpeg`
+  `/beaches/beach${Math.ceil(Math.random() * 19) + 1}.jpeg`
 
 export {
   cls,

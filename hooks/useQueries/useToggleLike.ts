@@ -4,11 +4,9 @@ import { AxiosError } from 'axios'
 import { ResponseType } from '@utils/interfaces'
 
 function useToggleLike() {
-  const { mutate: toggleLike, data } = useMutation<
-    ResponseType,
-    AxiosError,
-    string
-  >(toggleLikeFetcher)
+  const { mutate: toggleLike } = useMutation<ResponseType, AxiosError, string>(
+    toggleLikeFetcher
+  )
 
   return {
     toggleLike,

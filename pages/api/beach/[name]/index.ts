@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ResponseType } from '@utils/interfaces'
 import client from '@libs/client'
-import { parseCookies } from '@utils/index'
-import jwt from 'jsonwebtoken'
+import tokenValidator from '@libs/tokenValidator'
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse<ResponseType>,
+  userId: number
 ) {
   const {
     query: { name },
@@ -35,19 +35,15 @@ export default async function handler(
       },
     },
   })
-  // jwt 토큰 검증
-  const token = parseCookies(req.headers.cookie)['token']
-  // 로그인 하지 않았으면 isLiked(좋아요 여부) 리턴하지 않음
-  if (!token) return res.json({ ok: true, beach })
-  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
-  // 좋아요 여부
   const isLiked = Boolean(
     await client.like.findFirst({
       where: {
-        userId: id,
+        userId,
         beachName: String(name),
       },
     })
   )
   res.json({ ok: true, beach, isLiked })
 }
+
+export default tokenValidator(handler)

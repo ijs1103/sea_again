@@ -1,23 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ResponseType } from '@utils/interfaces'
-import { parseCookies } from '@utils/index'
-import jwt from 'jsonwebtoken'
 import client from '@libs/client'
+import tokenValidator from '@libs/tokenValidator'
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse<ResponseType>,
+  userId: number
 ) {
   const {
     query: { name },
   } = req
-  // jwt 토큰 검증
-  const token = parseCookies(req.headers.cookie)['token']
-  if (!token) return res.json({ ok: false })
-  const { id } = jwt.verify<any>(token, process.env.SECRET_KEY as string)
   const existingLike = await client.like.findFirst({
     where: {
-      userId: id,
+      userId,
       beachName: String(name),
     },
   })
@@ -32,7 +28,7 @@ export default async function handler(
       data: {
         user: {
           connect: {
-            id,
+            id: userId,
           },
         },
         beach: {
@@ -45,3 +41,5 @@ export default async function handler(
   }
   res.json({ ok: true })
 }
+
+export default tokenValidator(handler)

@@ -1,12 +1,12 @@
-import { dehydrate, useQuery, QueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { authFetcher } from '@utils/fetchers/ownApi'
+import { ResponseType } from '@utils/interfaces'
 
 function useAuth(mode: 'getProfile' | 'auth') {
   const router = useRouter()
-  const { data, isLoading } = useQuery<any>(['auth'], authFetcher)
-  console.log(data)
+  const { data, isLoading } = useQuery<ResponseType>(['auth'], authFetcher)
   useEffect(() => {
     if (mode === 'auth' && data && !data.ok && router.isReady)
       router.replace('/user/logIn')
@@ -20,15 +20,3 @@ function useAuth(mode: 'getProfile' | 'auth') {
 }
 
 export default useAuth
-
-// export async function getServerSideProps() {
-//   const queryClient = new QueryClient()
-
-//   await queryClient.prefetchQuery(['auth'], authFetcher)
-
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   }
-// }

@@ -1,18 +1,28 @@
 import Image from 'next/image'
-Image
+import { cls } from '@utils/index'
+import { BLUR_DATA_URL } from '@utils/constants'
 
 interface Props {
-	url: string
+	url: string,
+	isSmall?: boolean
 }
 
-function Avatar({ url }: Props) {
+function Avatar({ url, isSmall = false }: Props) {
 	return (
-		!url ?
-			<div
-				className='flex items-center justify-center w-12 h-12 p-1 rounded-full bg-primary'
-			>
+		url ?
+			<div className={cls('overflow-hidden relative rounded-full bg-slate-500 ', isSmall ? 'w-5 h-5 sm:w-8 sm:h-8' : 'w-12 h-12')}>
+				<Image
+					src={url}
+					className='object-cover'
+					alt='avatar-image'
+					layout='fill'
+					blurDataURL={BLUR_DATA_URL}
+					placeholder='blur'
+				/>
+			</div> :
+			<div className={cls('flex items-center justify-center p-1 rounded-full bg-primary ', isSmall ? 'w-5 h-5 sm:w-8 sm:h-8' : 'w-12 h-12')}>
 				<svg
-					className='w-12 h-12 stroke-gray-100'
+					className='stroke-gray-100'
 					fill='none'
 					viewBox='0 0 24 24'
 					xmlns='http://www.w3.org/2000/svg'
@@ -23,14 +33,8 @@ function Avatar({ url }: Props) {
 						strokeWidth='2'
 						d='M12 6v6m0 0v6m0-6h6m-6 0H6'
 					></path>
-				</svg></div> :
-			<Image
-				width={48}
-				height={48}
-				src={url}
-				className='rounded-full bg-slate-500'
-				alt='avatar-image'
-			/>
+				</svg></div>
+
 	)
 }
 

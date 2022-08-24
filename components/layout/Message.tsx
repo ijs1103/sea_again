@@ -1,4 +1,6 @@
 import useDeleteMessage from "@hooks/useQueries/useDeleteMessage"
+import Avatar from "./Avatar"
+
 
 interface Props {
 	isMyReview: boolean
@@ -6,16 +8,17 @@ interface Props {
 	userName: string
 	payload: string
 	reviewDate: string
+	avatar: string
 }
-function Message({ isMyReview, reviewId, userName, payload, reviewDate }: Props) {
+function Message({ isMyReview, reviewId, userName, payload, reviewDate, avatar }: Props) {
 	const { deleteMessage } = useDeleteMessage()
 	const handleDelete = () => {
 		confirm('정말로 삭제 하시겠습니까?') && deleteMessage({ reviewId })
 	}
 	return (
 		<div className="flex items-start space-x-2 group even:flex-row-reverse even:space-x-reverse">
-			<div className="w-5 h-5 rounded-full sm:w-8 sm:h-8 bg-slate-300" />
-			<div className='w-1/2 '>
+			{avatar ? <Avatar url={avatar} isSmall={true} /> : <div className="w-5 h-5 rounded-full bg-slate-300 sm:w-8 sm:h-8"></div>}
+			<div className='w-1/2'>
 				<span className='block w-full text-[10px] sm:text-xs font-bold text-left group-even:text-right'>{userName}</span>
 				<div className="relative p-1 mt-2 mb-1 text-sm text-gray-700 border border-gray-300 rounded-md sm:p-2 bg-oddComment group-even:bg-evenComment">
 					<p className='text-xs line-clamp-3'>{payload}</p>
