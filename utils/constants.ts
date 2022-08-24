@@ -23,7 +23,10 @@ const WATER_BASE_URL =
 const SAND_BASE_URL =
   'http://apis.data.go.kr/1192000/service/OceansBeachSandService1/getOceansBeachSandInfo1'
 const NO_RESEARCH_MSG = '😥 조사기록 없음'
-const W_CATEGORY = {
+interface Wcategory {
+  [key: string]: any
+}
+const W_CATEGORY: Wcategory = {
   PTY: {
     0: '없음',
     1: '비',
