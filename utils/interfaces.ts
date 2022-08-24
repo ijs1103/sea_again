@@ -1,3 +1,5 @@
+import { User } from '@prisma/client'
+
 export interface WeatherParams {
   base_date: string
   base_time: string
@@ -90,4 +92,8 @@ export interface IAddMarker {
   beachName?: string
   sido_nm?: string
   rank?: number
+}
+export interface GetUserResponseType {
+  isLogin: boolean
+  user?: User | null
 }

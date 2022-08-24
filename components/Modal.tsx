@@ -9,10 +9,10 @@ import WaterQuality from '@components/tabmenu/WaterQuality'
 import Sand from '@components/tabmenu/Sand'
 import Comment from '@components/tabmenu/Comment'
 import { useQueryClient } from '@tanstack/react-query'
-import useAuth from '@hooks/useAuth'
 import { RWebShare } from "react-web-share"
 import useToggleLike from '@hooks/useQueries/useToggleLike';
 import useBeachByName from '@hooks/useQueries/useBeachByName'
+import useUserInfo from '@hooks/useQueries/useUserInfo'
 
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
 }
 
 const Modal = ({ onModalClose, beachData }: Props) => {
-	const { isLogin } = useAuth('getProfile')
+	const { isLogin } = useUserInfo()
 	const queryClient = useQueryClient()
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const { data } = useBeachByName(`${beachData?.gugun_nm} ${beachData?.sta_nm}`)

@@ -13,12 +13,11 @@ import useAuth from '@hooks/useAuth'
 import useEditProfile from '@hooks/useQueries/useEditProfile'
 import Avatar from '@components/layout/Avatar'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import axios from 'axios'
 
 
 function Profile() {
-	const { profile } = useAuth('auth')
+	const { profile } = useAuth()
 	const { register, handleSubmit, formState, getValues, watch } =
 		useForm<ProfileForm>({ mode: "onChange" })
 	const { editProfile } = useEditProfile()
@@ -27,7 +26,7 @@ function Profile() {
 	let blobUrl = ""
 	// blob 생성 
 	useEffect(() => {
-		if (avatar && avatar.length > 0) {
+		if (avatar?.length) {
 			const file = avatar[0]
 			blobUrl = URL.createObjectURL(file)
 			setPreview(blobUrl)
@@ -40,10 +39,9 @@ function Profile() {
 	const onValid = async (form: ProfileForm) => {
 		const { new_password } = form
 		let newAvatar = ''
-		if (avatar && avatar.length > 0) {
+		if (avatar?.length) {
 			const file = avatar[0]
 			const { data: { url, objectName } } = await axios.post('/api/user/uploadAvatar', { name: file.name, type: file.type })
-			console.log(url, objectName)
 			await axios.put(url, file, {
 				headers: {
 					'Content-type': file.type,

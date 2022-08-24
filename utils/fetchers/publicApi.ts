@@ -84,7 +84,6 @@ const getWater = async (SIDO_NM: string, sta_nm: string) => {
   } = await axios.get<any>(WATER_BASE_URL, {
     params,
   })
-  console.log(item)
   // sta_nm(해수욕장 이름)이 수질확인 api 데이터와 일치하는 데이터(배열)를 모두 찾고,
   // 해당 배열의 res_yn(적합여부)가 전부 "적합"이면 적합 판정 O , 하나의 res_yn(적합여부)라도 "부적합"이면 적합 판정 X
   const tempArr = item.filter((cur: any) => cur.sta_nm === sta_nm)

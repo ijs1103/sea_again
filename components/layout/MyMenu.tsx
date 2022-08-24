@@ -2,14 +2,15 @@ import { cls } from '@utils/index'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import useAuth from '@hooks/useAuth'
 import useLogout from '@hooks/useQueries/useLogout'
+import useUserInfo from '@hooks/useQueries/useUserInfo'
+
 
 function MyMenu() {
 	const router = useRouter()
-	const { profile, isLogin } = useAuth('getProfile')
-	const { logOut } = useLogout()
 	const [isActive, setActive] = useState(false)
+	const { isLogin, profile } = useUserInfo(!!isActive)
+	const { logOut } = useLogout()
 	const toggleDropDown = () => setActive((prev: boolean) => !prev)
 	const handleLogInOutClick = async () => {
 		if (isLogin) {

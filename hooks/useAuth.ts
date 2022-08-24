@@ -4,12 +4,11 @@ import { useEffect } from 'react'
 import { authFetcher } from '@utils/fetchers/ownApi'
 import { ResponseType } from '@utils/interfaces'
 
-function useAuth(mode: 'getProfile' | 'auth') {
+function useAuth() {
   const router = useRouter()
   const { data, isLoading } = useQuery<ResponseType>(['auth'], authFetcher)
   useEffect(() => {
-    if (mode === 'auth' && data && !data.ok && router.isReady)
-      router.replace('/user/logIn')
+    if (data && !data.ok && router.isReady) router.replace('/user/logIn')
   }, [data, router])
 
   return {

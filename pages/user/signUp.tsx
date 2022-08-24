@@ -19,8 +19,7 @@ function SignUp() {
 		useForm<SignUpForm>({ mode: "onChange" })
 	const { signUp } = useSignup()
 	const onValid = (form: SignUpForm) => {
-		const { email, name, password } = form
-		signUp({ email, name, password })
+		signUp({ ...form })
 	}
 	return (
 		<MobileLayout isGoBack={false}>

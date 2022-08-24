@@ -75,7 +75,6 @@ const beachSlice = createSlice({
     setLikedBeach(state, { payload }) {
       if (!state.likedBeachs?.length) return
       const { sta_nm, gugun_nm } = payload
-      console.log(sta_nm, gugun_nm)
       state.likedBeach = state.likedBeachs.find(
         (cur) => cur.gugun_nm === gugun_nm && cur.sta_nm === sta_nm
       )

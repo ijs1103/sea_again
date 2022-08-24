@@ -5,13 +5,13 @@ import {
 	FORM_ERR_MSG,
 	PAGE_LIMIT
 } from '@utils/constants'
-import useAuth from '@hooks/useAuth'
 import { useCallback, useState, useEffect, useRef } from 'react'
 import Loader from '@components/Loader'
 import Pagination from '@components/layout/Pagination'
 import CommentNotFound from '@components/tabmenu/CommentNotFound'
 import useReview from '@hooks/useQueries/useReview'
 import useCreateReview from '@hooks/useQueries/useCreateReview'
+import useUserInfo from '@hooks/useQueries/useUserInfo'
 
 interface Props {
 	beachName: string
@@ -20,7 +20,7 @@ interface ReviewForm {
 	payload: string
 }
 function Comment({ beachName }: Props) {
-	const { isLogin, profile } = useAuth('getProfile')
+	const { isLogin, profile } = useUserInfo()
 	const { register, handleSubmit, formState, reset } =
 		useForm<ReviewForm>({ mode: 'onChange' })
 	const [page, setPage] = useState(1)

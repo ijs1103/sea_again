@@ -7,7 +7,6 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { name, password, email } = req.body
-  console.log(name, password, email)
   if (!name || !password || !email) return res.status(400).json({ ok: false })
   // 해당 email로 가입한 유저가 있는지 확인
   const existingUser = await client.user.findUnique({
