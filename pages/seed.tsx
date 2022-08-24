@@ -20,7 +20,7 @@ function setAllBeaches() {
 		})
 	}
 	return (
-		<button onClick={setBeaches}>모든 해수욕장 DB에 저장하기</button>
+		<button onClick={setBeaches} disabled>모든 해수욕장 DB에 저장하기</button>
 	)
 }
 

@@ -3,7 +3,7 @@ import SearchResult from '@components/layout/SearchResult';
 import Modal from '@components/Modal';
 import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { IAddMarker } from '@utils/interfaces'
 import MyMenu from '@components/layout/MyMenu';
 import useGeolocation from '@hooks/useGeolocation';
@@ -41,7 +41,7 @@ function Map() {
 	const { likedBeachRes } = useLikedBeach(router?.query?.userId as string)
 	const { toggleLike } = useToggleLike()
 	const [rePaintFlag, setRePaintFlag] = useState(false)
-	const handleModalClose = () => setIsModalOn(false)
+	const handleModalClose = useCallback(() => setIsModalOn(false), [])
 	const removeTopTen = () => {
 		markers.forEach(cur => cur.setMap(null))
 		overlays.forEach(cur => cur.setMap(null))
@@ -86,17 +86,16 @@ function Map() {
 			const gugun_nm = beachName?.split(' ')[0]
 			const sta_nm = beachName?.split(' ')[1]
 			if (!sido_nm || !gugun_nm || !sta_nm) return
-			console.log(sido_nm, gugun_nm, sta_nm)
 			dispatch(fetchSelected({ sido_nm, gugun_nm, sta_nm }))
 			setMode('search')
 			setIsModalOn(true)
 		});
-		if (['liked'].includes(mode)) overlay.setMap(null)
+		if (mode === 'liked') overlay.setMap(null)
 		mode !== 'topTen' && window.kakao.maps.event.addListener(marker, 'mouseover', function () {
-			(['liked'].includes(mode)) ? overlay.setMap(map) : overlay.setMap(null);
+			(mode === 'liked') ? overlay.setMap(map) : overlay.setMap(null);
 		});
 		mode !== 'topTen' && window.kakao.maps.event.addListener(marker, 'mouseout', function () {
-			(['liked'].includes(mode)) ? overlay.setMap(null) : overlay.setMap(map);
+			(mode === 'liked') ? overlay.setMap(null) : overlay.setMap(map);
 		});
 		marker.setMap(map);
 		setMarkers(prev => [...prev, marker]);
