@@ -7,7 +7,9 @@ function useWaterQuality(sido_nm: string, sta_nm: string) {
     data: waterQuality,
     isLoading,
     error,
-  } = useQuery<CheckResponse>(['water'], () => getWater(sido_nm, sta_nm))
+  } = useQuery<CheckResponse>(['water'], () => getWater(sido_nm, sta_nm), {
+    enabled: !!sido_nm && !!sta_nm,
+  })
   return {
     waterQuality,
     isLoading,

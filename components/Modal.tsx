@@ -86,9 +86,9 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 							</ul>
 						</div>
 						<div className='h-[200px] w-full'>
-							{currentTab === '날씨' && <Weather {...{ lat: beachData?.lat, lon: beachData?.lon }} />}
-							{currentTab === '수질' && <WaterQuality {...{ sido_nm: beachData?.sido_nm, sta_nm: beachData?.sta_nm }} />}
-							{currentTab === '모래' && <Sand {...{ sido_nm: beachData?.sido_nm, sta_nm: beachData?.sta_nm }} />}
+							{currentTab === '날씨' && <Weather {...{ lat: beachData?.lat ?? '', lon: beachData?.lon ?? '' }} />}
+							{currentTab === '수질' && <WaterQuality {...{ sido_nm: beachData?.sido_nm ?? '', sta_nm: beachData?.sta_nm ?? '' }} />}
+							{currentTab === '모래' && <Sand {...{ sido_nm: beachData?.sido_nm ?? '', sta_nm: beachData?.sta_nm ?? '' }} />}
 							{currentTab === '후기' && <Comment {...{ beachName: `${beachData?.gugun_nm} ${beachData?.sta_nm}` }} />}
 						</div>
 					</div>

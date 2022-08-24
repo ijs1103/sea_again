@@ -7,7 +7,9 @@ function useSand(sido_nm: string, sta_nm: string) {
     data: sand,
     isLoading,
     error,
-  } = useQuery<CheckResponse>(['sand'], () => getSand(sido_nm, sta_nm))
+  } = useQuery<CheckResponse>(['sand'], () => getSand(sido_nm, sta_nm), {
+    enabled: !!sido_nm && !!sta_nm,
+  })
   return {
     sand,
     isLoading,
