@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { AccountType } from '@utils/interfaces'
 import { createAccount } from '@utils/fetchers/ownApi'
 import { useRouter } from 'next/router'
@@ -11,17 +11,20 @@ function useSignup() {
     mutate: signUp,
     isLoading,
     error,
-  } = useMutation<ResponseType, AxiosError, AccountType>(createAccount, {
-    onSuccess: ({ data }) => {
-      if (data.ok) {
-        alert('가입을 축하합니다!!')
-        router.push('/user/logIn')
-      } else {
-        alert(data.error)
-      }
-    },
-    onError: (error) => console.log(error),
-  })
+  } = useMutation<AxiosResponse<ResponseType>, AxiosError, AccountType>(
+    createAccount,
+    {
+      onSuccess: ({ data }) => {
+        if (data.ok) {
+          alert('가입을 축하합니다!!')
+          router.push('/user/logIn')
+        } else {
+          alert(data.error)
+        }
+      },
+      onError: (error) => console.log(error),
+    }
+  )
   return {
     signUp,
     isLoading,

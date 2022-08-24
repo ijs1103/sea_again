@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { userLogOut } from '@utils/fetchers/ownApi'
 import { ResponseType } from '@utils/interfaces'
 
@@ -8,7 +8,7 @@ function useLogout() {
     mutate: logOut,
     isLoading,
     error,
-  } = useMutation<ResponseType, AxiosError>(userLogOut, {
+  } = useMutation<AxiosResponse<ResponseType>, AxiosError>(userLogOut, {
     onSuccess: ({ data }) => {
       if (data.ok) {
         alert('로그아웃 되었습니다!')

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { EditAccountType } from '@utils/interfaces'
 import { editAccount } from '@utils/fetchers/ownApi'
 import { ResponseType } from '@utils/interfaces'
@@ -9,16 +9,19 @@ function useEditProfile() {
     mutate: editProfile,
     isLoading,
     error,
-  } = useMutation<ResponseType, AxiosError, EditAccountType>(editAccount, {
-    onSuccess: ({ data }) => {
-      if (data.ok) {
-        alert('프로필이 변경 되었습니다')
-      } else {
-        alert(data.error)
-      }
-    },
-    onError: (error) => console.log(error),
-  })
+  } = useMutation<AxiosResponse<ResponseType>, AxiosError, EditAccountType>(
+    editAccount,
+    {
+      onSuccess: ({ data }) => {
+        if (data.ok) {
+          alert('프로필이 변경 되었습니다')
+        } else {
+          alert(data.error)
+        }
+      },
+      onError: (error) => console.log(error),
+    }
+  )
   return {
     editProfile,
     isLoading,
