@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextApiRequest, NextApiResponse } from 'next'
 import client from '@libs/client'
 import { parseCookies } from '@utils/index'
