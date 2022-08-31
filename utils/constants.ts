@@ -19,9 +19,9 @@ const WEATHER_BASE_URL =
 const BEACH_BASE_URL =
   'https://apis.data.go.kr/1192000/service/OceansBeachInfoService1/getOceansBeachInfo1'
 const WATER_BASE_URL =
-  'http://apis.data.go.kr/1192000/service/OceansBeachSeawaterService1/getOceansBeachSeawaterInfo1'
+  'https://apis.data.go.kr/1192000/service/OceansBeachSeawaterService1/getOceansBeachSeawaterInfo1'
 const SAND_BASE_URL =
-  'http://apis.data.go.kr/1192000/service/OceansBeachSandService1/getOceansBeachSandInfo1'
+  'https://apis.data.go.kr/1192000/service/OceansBeachSandService1/getOceansBeachSandInfo1'
 const NO_RESEARCH_MSG = '😥 조사기록 없음'
 interface Wcategory {
   [key: string]: any
