@@ -26,13 +26,13 @@ const Modal = ({ onModalClose, beachData }: Props) => {
 	const [currentTab, setCurrentTab] = useState<TabType>('날씨')
 	const { data } = useBeachByName(`${beachData?.gugun_nm} ${beachData?.sta_nm}`)
 	const { toggleLike } = useToggleLike()
-	const handleLikeclick = useCallback(() => {
+	const handleLikeclick = () => {
 		// 로그인을 한 상태가 아니라면 좋아요 로직이 실행되지 않도록 
 		if (!isLogin) return
 		toggleLike(`${beachData?.gugun_nm} ${beachData?.sta_nm}`)
 		// 캐시 데이터 즉시 업데이트 로직
 		queryClient.setQueryData(['beachByName', `${beachData?.gugun_nm} ${beachData?.sta_nm}`], (prev: any) => { return { ...prev, isLiked: !prev?.isLiked } })
-	}, [])
+	}
 	// 랜덤 생성한 이미지 src를 memoization
 	const randomSrc = useMemo(getRandomSrc, [])
 
