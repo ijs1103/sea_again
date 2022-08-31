@@ -33,7 +33,7 @@ export const fetchTopTen = createAsyncThunk<BeachResponse[]>(
     try {
       const {
         data: { topTenBeach },
-      } = await axios.get('api/beach/topTen')
+      } = await axios.get('/api/beach/topTen')
       return topTenBeach
     } catch (error) {
       throw error
