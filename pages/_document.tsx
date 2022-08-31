@@ -11,6 +11,7 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<meta charSet="utf-8" />
+					<meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 					<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 					<meta property="og:title" content="씨어게인" />
 					<meta property="og:image" content="https://seaagainuploads.s3.ap-northeast-2.amazonaws.com/avatars/seaagain_logo.png-1661275533657" />

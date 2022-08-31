@@ -24,8 +24,8 @@ function LogIn() {
 		<MobileLayout isGoBack={false}>
 			<FormLayout label='로그인'>
 				<form onSubmit={handleSubmit(onValid)} className='form-layout'>
-					<FormInput id={'email'} register={register("email", { required: true, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
-					<FormInput id={'password'} register={register("password", { required: true, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
+					<FormInput id={'email'} register={register("email", { required: FORM_ERR_MSG.required, pattern: { value: EMAIL_REGEX, message: FORM_ERR_MSG.invalidEmail } })} errorMsg={formState.errors['email']?.message} />
+					<FormInput id={'password'} register={register("password", { required: FORM_ERR_MSG.required, pattern: { value: PW_REGEX, message: FORM_ERR_MSG.invalidPw } })} errorMsg={formState.errors['password']?.message} />
 					<div className="flex items-center justify-between my-4 text-sm">
 						<div className='flex items-center'>
 							<input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300" />
