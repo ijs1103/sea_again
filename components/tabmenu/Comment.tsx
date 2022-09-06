@@ -1,8 +1,6 @@
 import Message from '@components/layout/Message'
 import { useForm } from 'react-hook-form'
 import {
-	REVIEW_REGEX,
-	FORM_ERR_MSG,
 	PAGE_LIMIT
 } from '@utils/constants'
 import { useCallback, useState, useEffect, useRef } from 'react'

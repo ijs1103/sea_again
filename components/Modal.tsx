@@ -1,7 +1,7 @@
 import { cls, extractOnlyPhoneNum, getRandomSrc } from '@utils/index'
 import { BeachResponse } from '@utils/interfaces'
 import Image from 'next/image'
-import { useCallback, useState, memo, useMemo } from 'react'
+import { useState, memo, useMemo } from 'react'
 import { TabType } from '@utils/interfaces'
 import { TAB_ARR, BLUR_DATA_URL } from '@utils/constants'
 import Weather from '@components/tabmenu/Weather'
