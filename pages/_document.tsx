@@ -19,7 +19,8 @@ class MyDocument extends Document {
 					<meta property="og:url" content="https://sea-again.vercel.app/" />
 					<meta name="description" content="안전하고 인기있는 해수욕장 찾고 싶을때는 씨어게인" />
 					<meta name="keywords" content="해수욕장 해변가 beach 씨어게인" />
-					<link rel="stylesheet" href="https:fonts.googleapis.com/earlyaccess/jejuhallasan.css" type="text/css" />
+					<link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/jejuhallasan.css" type="text/css" />
+
 				</Head>
 				<body>
 					<Main />
