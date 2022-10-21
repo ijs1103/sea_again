@@ -67,7 +67,7 @@ react-query의 다양한 기능을 활용하였고 useQuery, useMutation 메소�
 
 [기획, 기능명세, 트러블 슈팅, 최적화 관련 작성 페이지](https://plum-puppet-fa1.notion.site/28692385c13142c2bd20f532e10aed33)
 
-[![시연 영상](https://img.youtube.com/vi/FazXZ5xKjm4/0.jpg)](https://youtu.be/FazXZ5xKjm4)
+[시연 영상](https://youtu.be/FazXZ5xKjm4)
 
 
 
