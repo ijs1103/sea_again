@@ -1,5 +1,3 @@
-import { useCallback } from 'react'
-
 const getCurrentTime = () => {
   const newDate = new Date()
   const year = newDate.getFullYear() + ''

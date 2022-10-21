@@ -3,7 +3,7 @@ import SearchResult from '@components/layout/SearchResult';
 import Modal from '@components/Modal';
 import { KAKAO_MAP_URL } from '@utils/constants';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IAddMarker } from '@utils/interfaces'
 import MyMenu from '@components/layout/MyMenu';
 import useGeolocation from '@hooks/useGeolocation';
@@ -41,7 +41,7 @@ function Map() {
 	const { likedBeachRes } = useLikedBeach(router?.query?.userId as string)
 	const { toggleLike } = useToggleLike()
 	const [rePaintFlag, setRePaintFlag] = useState(false)
-	const handleModalClose = useCallback(() => setIsModalOn(false), [])
+	const handleModalClose = () => setIsModalOn(false)
 	const removeTopTen = () => {
 		markers.forEach(cur => cur.setMap(null))
 		overlays.forEach(cur => cur.setMap(null))
