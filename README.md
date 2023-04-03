@@ -63,8 +63,6 @@ react-query의 다양한 기능을 활용하였고 useQuery, useMutation 메소�
 
 ## 🔗 링크
 
-[배포 페이지(vercel)](https://sea-again.vercel.app/)
-
 [기획, 기능명세, 트러블 슈팅, 최적화 관련 작성 페이지](https://plum-puppet-fa1.notion.site/28692385c13142c2bd20f532e10aed33)
 
 [시연 영상](https://youtu.be/FazXZ5xKjm4)
